@@ -1,18 +1,20 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { Observable, take } from 'rxjs';
 import { MessageSummary, PaginatedMessageSummary } from '../state/state';
 import { Store } from '@ngrx/store';
-import { loadMessageSummaries } from '../state/message.actions';
+import { loadMessageSummaries, paginatorUpdate } from '../state/message.actions';
 import { CommonModule } from '@angular/common';
 import { selectError, selectLoading, selectMessageSummaries, selectPaginatedMessageSummaries } from '../state/message.selectors';
 
 @Component({
   selector: 'app-message-list',
-  imports: [CommonModule],
+  imports: [CommonModule, MatPaginatorModule],
   templateUrl: './message-list.component.html',
   styleUrl: './message-list.component.css'
 })
 export class MessageListComponent {
+
   pagination$: Observable<PaginatedMessageSummary | null>;
   messageSummaries$: Observable<MessageSummary[] | null>;
 
@@ -27,6 +29,17 @@ export class MessageListComponent {
   }
 
   load() {
-    this.store.dispatch(loadMessageSummaries({ pageNumber: 0, size: 10 }));
+    this.pagination$.pipe(
+      take(1)
+    ).subscribe((pagination) => {
+      if (pagination) {
+        this.store.dispatch(loadMessageSummaries({ pageNumber: pagination.pageNumber, size: pagination.pageSize }));
+      }
+    });
   }
-}
+
+  page(event: PageEvent) {
+    this.store.dispatch(paginatorUpdate({ update: event}));
+    this.load();
+    }
+  }

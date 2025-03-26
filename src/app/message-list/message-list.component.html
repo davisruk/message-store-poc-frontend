@@ -8,3 +8,10 @@
     {{ message.id }}
   </li>
 </ul>
+<mat-paginator [length]="(pagination$ | async)?.totalElements"
+                [pageSize]="(pagination$ | async)?.pageSize"
+                [pageSizeOptions]="[3, 5, 10, 25]"
+                [showFirstLastButtons]="true"
+                (page)="page($event)">
+
+</mat-paginator>

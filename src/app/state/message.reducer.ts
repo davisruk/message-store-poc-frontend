@@ -19,5 +19,16 @@ export const messageReducer = createReducer(
         ...state,
         loading: false,
         error: error
+    })),
+    on(MessageActions.paginatorUpdate, (state, { update }) => ({
+        ...state,
+        paginatedMessages: {
+            ...state.paginatedMessages,
+            content: state.paginatedMessages?.content || [],
+            totalPages: update.length,
+            pageNumber: update.pageIndex,
+            pageSize: update.pageSize,
+            totalElements: state.paginatedMessages?.totalElements || 0           
+        }
     }))
 )
