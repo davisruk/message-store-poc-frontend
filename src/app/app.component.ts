@@ -1,13 +1,9 @@
 import { Component } from '@angular/core';
-import { bootstrapApplication } from '@angular/platform-browser';
-import { RouterOutlet } from '@angular/router';
-import { provideStore } from '@ngrx/store';
-import { messageReducer } from './state/message.reducer';
 import { MessageListComponent } from "./message-list/message-list.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MessageListComponent],
+  imports: [MessageListComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

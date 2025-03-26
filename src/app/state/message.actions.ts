@@ -1,13 +1,17 @@
 import { createAction, props } from "@ngrx/store";
-import { Message } from "./state";
+import { PaginatedMessageSummary } from "./state";
 
-export const loadMessages = createAction ('[Message] Load Messages');
-export const loadMessagesSuccess = createAction (
-    '[Message] Load Messages Success',
-    props<{ messages: Message[] }>()
+export const loadMessageSummaries = createAction (
+    '[Message List] Load Message Summaries',
+    props<{ pageNumber: number, size: number }>()
 );
 
-export const loadMessagesFailure = createAction (
-    '[Message] Load Messages Failure',
+export const loadMessageSummariesSuccess = createAction (
+    '[Message] Load Message Summaries Success',
+    props<{ paginatedMessages: PaginatedMessageSummary }>()
+);
+
+export const loadMessageSummariesFailure = createAction (
+    '[Message] Load Message Summaries Failure',
     props<{ error: string }>()
 );

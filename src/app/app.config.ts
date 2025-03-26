@@ -6,13 +6,17 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { messageReducer } from './state/message.reducer';
+import { MessageEffects } from './state/message.effects';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideHttpClient(),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+    //provideRouter(routes),
+    provideRouter([]),
     provideStore({ messageState: messageReducer }),
-    provideEffects(),
+    provideEffects([MessageEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })
-  ]
+  ]  
 };

@@ -1,0 +1,10 @@
+<h1>Messages</h1>
+
+<button (click)="load()">Load Messages</button>
+<div *ngIf="loading$ | async">Loading...</div>
+<div *ngIf="error$ | async as error">Error: {{ error }}</div>
+<ul>
+  <li *ngFor="let message of messageSummaries$ | async">
+    {{ message.id }}
+  </li>
+</ul>
