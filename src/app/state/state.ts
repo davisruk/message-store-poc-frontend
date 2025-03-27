@@ -23,6 +23,7 @@ export interface MessageState {
     paginatedMessages: PaginatedMessageSummary | null;
     loading: boolean;
     error: string | null;
+    selectedMessage: Message | null;
 }
 
 const initialPaginatedMessagesState: PaginatedMessageSummary = {
@@ -35,5 +36,6 @@ const initialPaginatedMessagesState: PaginatedMessageSummary = {
 export const initialMessageState: MessageState = {
     paginatedMessages: initialPaginatedMessagesState,
     loading: false,
-    error: null
+    error: null,
+    selectedMessage: null
 }

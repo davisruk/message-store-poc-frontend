@@ -30,5 +30,21 @@ export const messageReducer = createReducer(
             pageSize: update.pageSize,
             totalElements: state.paginatedMessages?.totalElements || 0           
         }
+    })),
+    on(MessageActions.loadMessage, (state) => ({
+        ...state,
+        loading: true,
+        error: null
+    })),
+    on(MessageActions.loadMessageSuccess, (state, { message }) => ({
+        ...state,
+        loading: false,
+        selectedMessage: message,
+        error: null
+    })),
+    on(MessageActions.loadMessageFailure, (state, { error }) => ({
+        ...state,
+        loading: false,
+        error: error
     }))
 )

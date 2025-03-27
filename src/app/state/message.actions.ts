@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { PaginatedMessageSummary } from "./state";
+import { Message, PaginatedMessageSummary } from "./state";
 import { PageEvent } from "@angular/material/paginator";
 
 export const loadMessageSummaries = createAction (
@@ -20,4 +20,19 @@ export const loadMessageSummariesFailure = createAction (
 export const paginatorUpdate = createAction (
     '[Message List] Paginator Update',
     props<{ update: PageEvent }>()
+);
+
+export const loadMessage = createAction (
+    '[Message] Load Message',
+    props<{ id: string }>()
+);
+
+export const loadMessageSuccess = createAction (
+    '[Message] Load Message Success',
+    props<{ message: Message }>()
+);
+
+export const loadMessageFailure = createAction (
+    '[Message] Load Message Failure',
+    props<{ error: string }>()
 );

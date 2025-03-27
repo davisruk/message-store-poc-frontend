@@ -4,7 +4,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Observable, take } from 'rxjs';
 import { MessageSummary, PaginatedMessageSummary } from '../state/state';
 import { Store } from '@ngrx/store';
-import { loadMessageSummaries, paginatorUpdate } from '../state/message.actions';
+import { loadMessage, loadMessageSummaries, paginatorUpdate } from '../state/message.actions';
 import { CommonModule } from '@angular/common';
 import { selectError, selectLoading, selectMessageSummaries, selectPaginatedMessageSummaries } from '../state/message.selectors';
 import { Component, inject } from '@angular/core';
@@ -57,5 +57,6 @@ export class MessageListComponent {
 
   tableRowClicked(row: MessageSummary) {
     this.selectedRow = row;
+    this.store.dispatch(loadMessage({ id: row.id }));
   }
 }

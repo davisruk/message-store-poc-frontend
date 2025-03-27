@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { map, catchError, of, switchMap } from "rxjs";
-import { loadMessageSummaries, loadMessageSummariesSuccess, loadMessageSummariesFailure } from "./message.actions";
+import { loadMessageSummaries, loadMessageSummariesSuccess, loadMessageSummariesFailure, loadMessage, loadMessageSuccess, loadMessageFailure } from "./message.actions";
 import { MessageApiService } from "../services/message-api.service";
 
 @Injectable()
@@ -20,4 +20,11 @@ export class MessageEffects {
             catchError(error => of(loadMessageSummariesFailure({ error: error.message })))
         ))
     ));
+
+    loadMessage$ = createEffect(() => this.actions$.pipe(
+        ofType(loadMessage),
+        switchMap(({id}) => this.messageService.getMessage(id).pipe(
+            map(message => loadMessageSuccess({ message })),
+            catchError(error => of(loadMessageFailure({ error: error.message })))
+        ))));
 }

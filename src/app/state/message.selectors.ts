@@ -24,3 +24,8 @@ export const selectError = createSelector(
   selectMessageState,
   (state: MessageState) => state.error
 );
+
+export const selectSelectedMessage = createSelector(
+  selectMessageState,
+  state => state.selectedMessage
+);
