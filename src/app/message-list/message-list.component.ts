@@ -1,16 +1,17 @@
-import { Component, inject } from '@angular/core';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Observable, take } from 'rxjs';
 import { MessageSummary, PaginatedMessageSummary } from '../state/state';
 import { Store } from '@ngrx/store';
 import { loadMessageSummaries, paginatorUpdate } from '../state/message.actions';
 import { CommonModule } from '@angular/common';
 import { selectError, selectLoading, selectMessageSummaries, selectPaginatedMessageSummaries } from '../state/message.selectors';
+import { Component, inject } from '@angular/core';
 
 @Component({
   selector: 'app-message-list',
-  imports: [CommonModule, MatPaginatorModule, MatIconModule],
+  imports: [CommonModule, MatPaginatorModule, MatIconModule, MatTableModule],
   templateUrl: './message-list.component.html',
   styleUrl: './message-list.component.css'
 })
@@ -20,10 +21,11 @@ export class MessageListComponent {
   
   pagination$: Observable<PaginatedMessageSummary | null>;
   messageSummaries$: Observable<MessageSummary[] | null>;
-
+  dataSource = new MatTableDataSource<MessageSummary>();
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
-
+  
+  displayedColumns: string[] = ['id', 'subject', 'from', 'to', 'date'];
   constructor() {
     this.pagination$ = this.store.select(selectPaginatedMessageSummaries);
     this.messageSummaries$ = this.store.select(selectMessageSummaries);
@@ -31,6 +33,12 @@ export class MessageListComponent {
     this.error$ = this.store.select(selectError);
   }
 
+  ngOnInit() {
+    this.messageSummaries$.subscribe((messageSummaries) => {
+      this.dataSource.data = messageSummaries ?? [];  
+    });
+  }
+  
   load() {
     this.pagination$.pipe(
       take(1)

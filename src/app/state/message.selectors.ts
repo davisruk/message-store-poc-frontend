@@ -12,7 +12,7 @@ export const selectPaginatedMessageSummaries = createSelector(
 
 export const selectMessageSummaries = createSelector(
   selectPaginatedMessageSummaries,
-  (state: PaginatedMessageSummary | null) => state ? state.content : null
+  (state: PaginatedMessageSummary | null) => state ? state.content : []
 );
 
 export const selectLoading = createSelector(
