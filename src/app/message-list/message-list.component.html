@@ -3,15 +3,18 @@
 <button (click)="load()">Load Messages</button>
 <div *ngIf="loading$ | async">Loading...</div>
 <div *ngIf="error$ | async as error">Error: {{ error }}</div>
-<ul>
-  <li *ngFor="let message of messageSummaries$ | async">
-    {{ message.id }}
-  </li>
-</ul>
-<mat-paginator [length]="(pagination$ | async)?.totalElements"
-                [pageSize]="(pagination$ | async)?.pageSize"
-                [pageSizeOptions]="[3, 5, 10, 25]"
-                [showFirstLastButtons]="true"
-                (page)="page($event)">
+<div>
+  <ul>
+    <li *ngFor="let message of messageSummaries$ | async">
+      {{ message.id }}
+    </li>
+  </ul>
 
-</mat-paginator>
+  <mat-paginator *ngIf="(pagination$ | async) as pagination"
+                  [length]="pagination.totalElements"
+                  [pageSize]="pagination.pageSize"
+                  [pageSizeOptions]="[3, 5, 10, 25]"
+                  [showFirstLastButtons]="true"
+                  (page)="page($event)">
+  </mat-paginator>
+</div>

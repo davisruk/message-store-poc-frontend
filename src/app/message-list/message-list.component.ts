@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { Observable, take } from 'rxjs';
@@ -16,17 +16,19 @@ import { selectError, selectLoading, selectMessageSummaries, selectPaginatedMess
 })
 export class MessageListComponent {
 
+  private store = inject(Store);
+  
   pagination$: Observable<PaginatedMessageSummary | null>;
   messageSummaries$: Observable<MessageSummary[] | null>;
 
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
 
-  constructor(private store: Store) {
+  constructor() {
     this.pagination$ = this.store.select(selectPaginatedMessageSummaries);
     this.messageSummaries$ = this.store.select(selectMessageSummaries);
     this.loading$ = this.store.select(selectLoading);
-    this.error$ =this.store.select(selectError);
+    this.error$ = this.store.select(selectError);
   }
 
   load() {
