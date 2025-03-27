@@ -26,6 +26,7 @@ export class MessageListComponent {
   error$: Observable<string | null>;
   
   displayedColumns: string[] = ['id', 'subject', 'from', 'to', 'date'];
+  selectedRow: MessageSummary | null = null;
   constructor() {
     this.pagination$ = this.store.select(selectPaginatedMessageSummaries);
     this.messageSummaries$ = this.store.select(selectMessageSummaries);
@@ -52,5 +53,9 @@ export class MessageListComponent {
   page(event: PageEvent) {
     this.store.dispatch(paginatorUpdate({ update: event}));
     this.load();
-    }
   }
+
+  tableRowClicked(row: MessageSummary) {
+    this.selectedRow = row;
+  }
+}
