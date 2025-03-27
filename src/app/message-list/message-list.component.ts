@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatIconModule } from '@angular/material/icon';
 import { Observable, take } from 'rxjs';
 import { MessageSummary, PaginatedMessageSummary } from '../state/state';
 import { Store } from '@ngrx/store';
@@ -9,7 +10,7 @@ import { selectError, selectLoading, selectMessageSummaries, selectPaginatedMess
 
 @Component({
   selector: 'app-message-list',
-  imports: [CommonModule, MatPaginatorModule],
+  imports: [CommonModule, MatPaginatorModule, MatIconModule],
   templateUrl: './message-list.component.html',
   styleUrl: './message-list.component.css'
 })
