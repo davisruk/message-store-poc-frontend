@@ -18,3 +18,14 @@
 ::ng-deep .mat-mdc-row {
     pointer-events: auto;
   }
+.message-summary-table {
+  font-size: 0.85rem; /* Adjust font size for better readability */
+}
+
+:host {
+  display: block;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  padding: 8px;
+}

@@ -25,7 +25,7 @@ export class MessageListComponent {
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
   
-  displayedColumns: string[] = ['id', 'subject', 'from', 'to', 'date'];
+  displayedColumns: string[] = ['id', 'source', 'destination', 'correlation', 'tech'];
   selectedRow: MessageSummary | null = null;
   constructor() {
     this.pagination$ = this.store.select(selectPaginatedMessageSummaries);
@@ -35,6 +35,7 @@ export class MessageListComponent {
   }
 
   ngOnInit() {
+    this.load();
     this.messageSummaries$.subscribe((messageSummaries) => {
       this.dataSource.data = messageSummaries ?? [];  
     });
