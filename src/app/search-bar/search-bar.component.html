@@ -1,8 +1,10 @@
-<div>
-    <input [formControl]="searchControl" placeholder="Search messages..." />
-    <label>
-      <input type="checkbox" [formControl]="includePayloadControl" />
-      Include Payload
-    </label>
- </div>
+<div class="search-bar">
+    <mat-form-field appearance="fill" class="search-input">
+      <mat-label>Search messages</mat-label>
+      <input matInput [formControl]="searchControl" />
+    </mat-form-field>
   
+    <mat-checkbox [formControl]="includePayloadControl">
+      Include Payload
+    </mat-checkbox>
+</div>

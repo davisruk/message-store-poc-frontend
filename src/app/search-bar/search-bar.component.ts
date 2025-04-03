@@ -2,12 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { combineLatestWith, debounceTime, distinctUntilChanged, filter, map, startWith, take } from 'rxjs';
+import { combineLatestWith, debounceTime, distinctUntilChanged, filter, startWith } from 'rxjs';
 import { searchMessages, updateSearchCriteria } from '../state/message.actions';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-search-bar',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatCheckboxModule],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css'
 })

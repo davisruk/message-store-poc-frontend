@@ -1,5 +1,10 @@
-input[type="text"] {
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 8px;
+  }
+  
+  .search-input {
     width: 300px;
-    padding: 6px;
-    margin-right: 8px;
-}
+  }
