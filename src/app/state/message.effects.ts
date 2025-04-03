@@ -1,8 +1,10 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { map, catchError, of, switchMap } from "rxjs";
-import { loadMessageSummaries, loadMessageSummariesSuccess, loadMessageSummariesFailure, loadMessage, loadMessageSuccess, loadMessageFailure, searchMessages, searchMessagesSuccess, searchMessagesFailure } from "./message.actions";
+import { map, catchError, of, switchMap, withLatestFrom } from "rxjs";
+import { loadMessage, loadMessageSuccess, loadMessageFailure, searchMessages, searchMessagesSuccess, searchMessagesFailure } from "./message.actions";
 import { MessageApiService } from "../services/message-api.service";
+import { Store } from "@ngrx/store";
+import { selectIncludePayload, selectPageNumber, selectPageSize, selectQuery } from "./message.selectors";
 
 @Injectable()
 export class MessageEffects {
@@ -12,15 +14,8 @@ export class MessageEffects {
     // alternatively, use a constructor to create the effects
     private actions$ = inject(Actions);
     private messageService = inject(MessageApiService);
-
-    loadMessages$ = createEffect(() => this.actions$.pipe(
-        ofType(loadMessageSummaries),
-        switchMap(action => this.messageService.getMessageSummaries(action.pageNumber, action.size).pipe(
-            map(response => loadMessageSummariesSuccess({ paginatedMessages: response })),
-            catchError(error => of(loadMessageSummariesFailure({ error: error.message })))
-        ))
-    ));
-
+    private store = inject(Store);
+    
     loadMessage$ = createEffect(() => this.actions$.pipe(
         ofType(loadMessage),
         switchMap(({ id }) => this.messageService.getMessage(id).pipe(
@@ -31,8 +26,14 @@ export class MessageEffects {
 
     loadSearchMessages$ = createEffect(() => this.actions$.pipe(
         ofType(searchMessages),
-        switchMap(({ query, includePayload, pageNumber, size }) =>
-            this.messageService.searchMessages(query, includePayload, pageNumber, size).pipe(
+        withLatestFrom(
+            this.store.select(selectQuery),
+            this.store.select(selectIncludePayload),
+            this.store.select(selectPageNumber),
+            this.store.select(selectPageSize) 
+        ),
+        switchMap(([action, query, includePayload, pageNumber, pageSize]) =>
+            this.messageService.searchMessages(query, includePayload, pageNumber, pageSize).pipe(
                 map(paginatedMessages => searchMessagesSuccess({ paginatedMessages })),
                 catchError(error => of(searchMessagesFailure({ error: error.message })))
             ))

@@ -15,6 +15,16 @@ export const selectMessageSummaries = createSelector(
   (state: PaginatedMessageSummary | null) => state ? state.content : []
 );
 
+export const selectPageNumber = createSelector(
+  selectPaginatedMessageSummaries,
+  (state: PaginatedMessageSummary | null) => state ? state.pageNumber : 0
+);
+
+export const selectPageSize = createSelector(
+  selectPaginatedMessageSummaries,
+  (state: PaginatedMessageSummary | null) => state ? state.pageSize : 0
+);
+
 export const selectLoading = createSelector(
   selectMessageState,
   (state: MessageState) => state.loading
@@ -29,3 +39,14 @@ export const selectSelectedMessage = createSelector(
   selectMessageState,
   state => state.selectedMessage
 );
+
+export const selectQuery = createSelector(
+  selectMessageState,
+  state => state.query
+);
+
+export const selectIncludePayload = createSelector(
+  selectMessageState,
+  state => state.includePayload
+);
+

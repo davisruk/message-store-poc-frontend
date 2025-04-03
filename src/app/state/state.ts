@@ -24,6 +24,8 @@ export interface MessageState {
     loading: boolean;
     error: string | null;
     selectedMessage: Message | null;
+    query: string;
+    includePayload: boolean;
 }
 
 const initialPaginatedMessagesState: PaginatedMessageSummary = {
@@ -37,5 +39,7 @@ export const initialMessageState: MessageState = {
     paginatedMessages: initialPaginatedMessagesState,
     loading: false,
     error: null,
-    selectedMessage: null
+    selectedMessage: null,
+    query: '',
+    includePayload: false
 }

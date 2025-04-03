@@ -3,9 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { combineLatestWith, debounceTime, distinctUntilChanged, filter, map, startWith, take } from 'rxjs';
-import { searchMessages } from '../state/message.actions';
-import { selectPaginatedMessageSummaries } from '../state/message.selectors';
-import { initialMessageState, PaginatedMessageSummary } from '../state/state';
+import { searchMessages, updateSearchCriteria } from '../state/message.actions';
 
 @Component({
   selector: 'app-search-bar',
@@ -31,16 +29,9 @@ export class SearchBarComponent {
         )
       )
       .subscribe(([query, includePayload]) => { // subscribe to the combined values
-        this.store.select(selectPaginatedMessageSummaries) // select the paginated message summaries from the store
-          .pipe(take(1)) // take the first value emitted
-          .subscribe(pagination => {
-            this.store.dispatch(searchMessages({
-              query,
-              includePayload,
-              pageNumber: pagination?.pageNumber || 0,
-              size: pagination?.pageSize || 10
-            }));
+            this.store.dispatch(updateSearchCriteria({ query, includePayload })); // dispatch the updateSearchCriteria action
+            this.store.dispatch(searchMessages());
           });
-      });
-  }
+    };
 }
+

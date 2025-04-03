@@ -4,7 +4,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Observable, take } from 'rxjs';
 import { MessageSummary, PaginatedMessageSummary } from '../state/state';
 import { Store } from '@ngrx/store';
-import { loadMessage, loadMessageSummaries, paginatorUpdate } from '../state/message.actions';
+import { loadMessage, paginatorUpdate, searchMessages } from '../state/message.actions';
 import { CommonModule } from '@angular/common';
 import { selectError, selectLoading, selectMessageSummaries, selectPaginatedMessageSummaries } from '../state/message.selectors';
 import { Component, inject } from '@angular/core';
@@ -46,7 +46,7 @@ export class MessageListComponent {
       take(1)
     ).subscribe((pagination) => {
       if (pagination) {
-        this.store.dispatch(loadMessageSummaries({ pageNumber: pagination.pageNumber, size: pagination.pageSize }));
+        this.store.dispatch(searchMessages());
       }
     });
   }
