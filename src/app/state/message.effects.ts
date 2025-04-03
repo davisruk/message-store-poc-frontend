@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { map, catchError, of, switchMap } from "rxjs";
-import { loadMessageSummaries, loadMessageSummariesSuccess, loadMessageSummariesFailure, loadMessage, loadMessageSuccess, loadMessageFailure } from "./message.actions";
+import { loadMessageSummaries, loadMessageSummariesSuccess, loadMessageSummariesFailure, loadMessage, loadMessageSuccess, loadMessageFailure, searchMessages, searchMessagesSuccess, searchMessagesFailure } from "./message.actions";
 import { MessageApiService } from "../services/message-api.service";
 
 @Injectable()
@@ -23,8 +23,19 @@ export class MessageEffects {
 
     loadMessage$ = createEffect(() => this.actions$.pipe(
         ofType(loadMessage),
-        switchMap(({id}) => this.messageService.getMessage(id).pipe(
+        switchMap(({ id }) => this.messageService.getMessage(id).pipe(
             map(message => loadMessageSuccess({ message })),
             catchError(error => of(loadMessageFailure({ error: error.message })))
-        ))));
+        ))
+    ));
+
+    loadSearchMessages$ = createEffect(() => this.actions$.pipe(
+        ofType(searchMessages),
+        switchMap(({ query, includePayload, pageNumber, size }) =>
+            this.messageService.searchMessages(query, includePayload, pageNumber, size).pipe(
+                map(paginatedMessages => searchMessagesSuccess({ paginatedMessages })),
+                catchError(error => of(searchMessagesFailure({ error: error.message })))
+            ))
+        )
+    );
 }

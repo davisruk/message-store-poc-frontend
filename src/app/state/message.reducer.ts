@@ -46,5 +46,11 @@ export const messageReducer = createReducer(
         ...state,
         loading: false,
         error: error
-    }))
+    })),
+    on(MessageActions.searchMessagesSuccess, (state, { paginatedMessages }) => ({
+        ...state,
+        paginatedMessages: paginatedMessages,
+        loading: false,
+        error: null
+    })),
 )

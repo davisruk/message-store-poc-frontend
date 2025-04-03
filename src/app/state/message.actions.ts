@@ -36,3 +36,18 @@ export const loadMessageFailure = createAction (
     '[Message] Load Message Failure',
     props<{ error: string }>()
 );
+
+export const searchMessages = createAction (
+    '[Search] Search Messages',
+    props<{query: string; includePayload: boolean; pageNumber: number; size: number}>()
+);
+
+export const searchMessagesSuccess = createAction (
+    '[Search] Search Messages Success',
+    props<{ paginatedMessages: PaginatedMessageSummary }>()
+);
+
+export const searchMessagesFailure = createAction (
+    '[Search] Search Messages Failure',
+    props<{ error: string }>()
+);
