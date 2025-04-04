@@ -7,7 +7,8 @@ import { Store } from '@ngrx/store';
 import { loadMessage, paginatorUpdate, searchMessages } from '../state/message.actions';
 import { CommonModule } from '@angular/common';
 import { selectError, selectLoading, selectMessageSummaries, selectPaginatedMessageSummaries } from '../state/message.selectors';
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, ViewChild } from '@angular/core';
+import { safeSubscribe } from '../utils/rx-helpers';
 
 @Component({
   selector: 'app-message-list',
@@ -18,7 +19,8 @@ import { Component, inject, ViewChild } from '@angular/core';
 export class MessageListComponent {
 
   private store = inject(Store);
-  
+  private destroyRef = inject(DestroyRef);
+
   pagination$: Observable<PaginatedMessageSummary | null>;
   messageSummaries$: Observable<MessageSummary[] | null>;
   dataSource = new MatTableDataSource<MessageSummary>();
@@ -28,6 +30,7 @@ export class MessageListComponent {
   
   displayedColumns: string[] = ['id', 'source', 'destination', 'correlation', 'tech'];
   selectedRow: MessageSummary | null = null;
+  
   constructor() {
     this.pagination$ = this.store.select(selectPaginatedMessageSummaries);
     this.messageSummaries$ = this.store.select(selectMessageSummaries);
@@ -36,23 +39,29 @@ export class MessageListComponent {
   }
 
   ngOnInit() {
-      // subscribe to the pagination$ observable and update the paginator
-      // mat-paginator does not synchronize with the observable automatically
-      // so we need to do it manually
-      this.pagination$.subscribe((pagination) => {
-      if (pagination && this.paginator) {
-        this.paginator.pageIndex = pagination.pageNumber;
-        this.paginator.pageSize = pagination.pageSize;
-        this.paginator.length = pagination.totalElements;
-      }
-    });
-
+  
     this.load();
-    this.messageSummaries$.subscribe((messageSummaries) => {
-      this.dataSource.data = messageSummaries ?? [];  
+    
+    safeSubscribe(this.messageSummaries$, this.destroyRef, (messageSummaries) => {
+      console.log('Setting dataSource.data to', messageSummaries);
+      this.dataSource.data = messageSummaries ?? [];
     });
   }
   
+  ngAfterViewInit() {
+      // subscribe to the pagination$ observable and update the paginator
+      // mat-paginator does not synchronize with the observable automatically
+      // so we need to do it manually
+      // need to put it here because the paginator is not available in ngOnInit
+      safeSubscribe(this.pagination$, this.destroyRef, (pagination) => {
+        if (pagination && this.paginator) {
+          this.paginator.pageIndex = pagination.pageNumber;
+          this.paginator.pageSize = pagination.pageSize;
+          this.paginator.length = pagination.totalElements;
+      }
+    });
+  }
+
   load() {
     this.pagination$.pipe(
       take(1)
