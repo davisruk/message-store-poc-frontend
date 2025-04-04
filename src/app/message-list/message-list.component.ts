@@ -2,11 +2,11 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Observable, take } from 'rxjs';
-import { MessageSummary, PaginatedMessageSummary } from '../state/state';
+import { Message, MessageSummary, PaginatedMessageSummary } from '../state/state';
 import { Store } from '@ngrx/store';
 import { loadMessage, paginatorUpdate, searchMessages } from '../state/message.actions';
 import { CommonModule } from '@angular/common';
-import { selectError, selectLoading, selectMessageSummaries, selectPaginatedMessageSummaries } from '../state/message.selectors';
+import { selectError, selectLoading, selectMessageSummaries, selectPaginatedMessageSummaries, selectSelectedMessages } from '../state/message.selectors';
 import { Component, DestroyRef, inject, ViewChild } from '@angular/core';
 import { safeSubscribe } from '../utils/rx-helpers';
 
@@ -23,6 +23,7 @@ export class MessageListComponent {
 
   pagination$: Observable<PaginatedMessageSummary | null>;
   messageSummaries$: Observable<MessageSummary[] | null>;
+  selectedMessages$: Observable<Message[]>
   dataSource = new MatTableDataSource<MessageSummary>();
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
@@ -36,6 +37,7 @@ export class MessageListComponent {
     this.messageSummaries$ = this.store.select(selectMessageSummaries);
     this.loading$ = this.store.select(selectLoading);
     this.error$ = this.store.select(selectError);
+    this.selectedMessages$ = this.store.select(selectSelectedMessages);
   }
 
   ngOnInit() {
@@ -78,7 +80,10 @@ export class MessageListComponent {
   }
 
   tableRowClicked(row: MessageSummary) {
-    this.selectedRow = row;
     this.store.dispatch(loadMessage({ id: row.id }));
+  }
+
+  isSelected(row: MessageSummary, selected: Message[]): boolean {
+    return selected.some((message) => message.id === row.id);
   }
 }

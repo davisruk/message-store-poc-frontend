@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { selectSelectedMessage } from '../state/message.selectors';
+import { selectSelectedMessages } from '../state/message.selectors';
 import { Store } from '@ngrx/store';
+import { map, Observable } from 'rxjs';
+import { Message } from '../state/state';
 
 @Component({
   selector: 'app-message',
@@ -12,5 +14,10 @@ import { Store } from '@ngrx/store';
 })
 export class MessageComponent {
   store:Store = inject(Store);
-  selectedMessage$ = this.store.select(selectSelectedMessage);
+  @Input() messageIndex!: number;
+  message$: Observable<Message | null>;
+  constructor(){
+    this.message$ = this.store.select(selectSelectedMessages).pipe(
+      map(messages => messages[this.messageIndex] ?? null));
+  }
 }

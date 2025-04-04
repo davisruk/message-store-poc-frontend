@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import { initialMessageState } from "./state";
+import { initialMessageState, Message } from "./state";
 import * as MessageActions from './message.actions';
 
 export const messageReducer = createReducer(
@@ -57,4 +57,18 @@ export const messageReducer = createReducer(
         loading: false,
         error: error
     })),
-)
+    on(MessageActions.addSelectedMessage, (state, { message }) => {
+        const alreadySelected = state.selectedMessages?.find(m => m.id === message.id);
+        let updated: Message[];
+        if (alreadySelected) {
+            updated = state.selectedMessages.filter(m => m.id !== message.id);
+        } else if (state.selectedMessages.length < 2) {
+            updated = [...state.selectedMessages, message];
+        } else {
+            updated = [state.selectedMessages[0], message];
+        }
+        return {
+            ...state,
+            selectedMessages: updated
+        };
+    }))

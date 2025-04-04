@@ -6,3 +6,10 @@
     height: 100%;
     box-sizing: border-box;
   }
+  .message-detail-container {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-top: 16px;
+    flex-wrap: wrap; /* optional, ensures wrapping on narrow screens */
+  }

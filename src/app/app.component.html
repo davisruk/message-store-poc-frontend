@@ -3,5 +3,10 @@
 <div class="layout-container">
     <app-search-bar></app-search-bar>
     <app-message-list></app-message-list>
-    <app-message></app-message>
+    <div class="message-detail-container">
+        <ng-container *ngIf="selectedMessages$ | async as selectedMessages">
+            <app-message [messageIndex]="0"></app-message>
+            <app-message *ngIf="selectedMessages.length > 1" [messageIndex]="1"></app-message>
+        </ng-container>
+    </div>
 </div>

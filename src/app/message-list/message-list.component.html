@@ -1,6 +1,7 @@
 <div *ngIf="loading$ | async">Loading...</div>
 <div *ngIf="error$ | async as error">Error: {{ error }}</div>
 <div>
+  <ng-container *ngIf="selectedMessages$ | async as selectedMessages"> 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 message-summary-table">
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> ID </th>
@@ -25,12 +26,11 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row 
       (click)="tableRowClicked(row)"
-      tabindex="-1"
-      [class.selected-row]="row === selectedRow"
-      class="mat-elevation-z2"
-      *matRowDef="let row; columns: displayedColumns;">
-    </tr>
+      *matRowDef="let row; columns: displayedColumns;"
+      [class.selected-row]="isSelected(row, selectedMessages)">
+      </tr>
   </table>
+</ng-container>
   <mat-paginator *ngIf="(pagination$ | async) as pagination"
                   [length]="pagination.totalElements"
                   [pageSize]="pagination.pageSize"

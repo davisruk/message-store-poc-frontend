@@ -35,9 +35,9 @@ export const selectError = createSelector(
   (state: MessageState) => state.error
 );
 
-export const selectSelectedMessage = createSelector(
+export const selectSelectedMessages = createSelector(
   selectMessageState,
-  state => state.selectedMessage
+  state => state.selectedMessages
 );
 
 export const selectQuery = createSelector(

@@ -40,3 +40,8 @@ export const updateSearchCriteria = createAction (
     '[Search] Update Search Criteria',
     props<{ query: string, includePayload: boolean }>()
 );
+
+export const addSelectedMessage = createAction (
+    '[Message] Add Selected Message',
+    props<{ message: Message }>()
+);

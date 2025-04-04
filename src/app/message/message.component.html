@@ -1,9 +1,11 @@
-<mat-card *ngIf="selectedMessage$ | async as message">
-    <mat-card-header>
-        <mat-card-title>Message Details</mat-card-title>
-        <mat-card-subtitle>Message ID: {{ message.messageId }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-        <pre>{{ message.payload }}</pre>
-    </mat-card-content>
-</mat-card>
+<div *ngIf="message$ | async as message" class="message-container">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ message.messageId }}</mat-card-title>
+        <mat-card-subtitle>{{ message.sourceSystem }} → {{ message.destinationAddress }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        {{ message.payload }}
+      </mat-card-content>
+    </mat-card>
+  </div>

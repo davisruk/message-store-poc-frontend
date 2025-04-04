@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { map, catchError, of, switchMap, withLatestFrom } from "rxjs";
-import { loadMessage, loadMessageSuccess, loadMessageFailure, searchMessages, searchMessagesSuccess, searchMessagesFailure } from "./message.actions";
+import { loadMessage, loadMessageSuccess, loadMessageFailure, searchMessages, searchMessagesSuccess, searchMessagesFailure, addSelectedMessage } from "./message.actions";
 import { MessageApiService } from "../services/message-api.service";
 import { Store } from "@ngrx/store";
 import { selectIncludePayload, selectPageNumber, selectPageSize, selectQuery } from "./message.selectors";
@@ -19,7 +19,7 @@ export class MessageEffects {
     loadMessage$ = createEffect(() => this.actions$.pipe(
         ofType(loadMessage),
         switchMap(({ id }) => this.messageService.getMessage(id).pipe(
-            map(message => loadMessageSuccess({ message })),
+            map(message => addSelectedMessage({ message })),
             catchError(error => of(loadMessageFailure({ error: error.message })))
         ))
     ));
