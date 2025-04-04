@@ -35,13 +35,26 @@ export const messageReducer = createReducer(
     on(MessageActions.searchMessagesSuccess, (state, { paginatedMessages }) => ({
         ...state,
         paginatedMessages: paginatedMessages,
+        selectedMessage: null,
         loading: false,
         error: null
     })),
     on(MessageActions.updateSearchCriteria, (state, { query, includePayload }) => ({
         ...state,
         query: query,
-        includePayload: includePayload
+        includePayload: includePayload,
+        paginatedMessages: {
+            ...state.paginatedMessages,
+            content: state.paginatedMessages?.content || [], // Preserve existing content or default to an empty array
+            pageNumber: 0,
+            totalElements: state.paginatedMessages?.totalElements || 0, // Default to 0 if undefined
+            totalPages: state.paginatedMessages?.totalPages || 0, // Default to 0 if undefined
+            pageSize: state.paginatedMessages?.pageSize || 10 // Default to 10 if undefined
+        }
+        })),
+    on(MessageActions.searchMessagesFailure, (state, { error }) => ({
+        ...state,
+        loading: false,
+        error: error
     })),
-    
 )
