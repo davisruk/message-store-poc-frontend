@@ -1,6 +1,17 @@
-<mat-form-field appearance="outline" class="column-input-field" floatLabel="auto">
+<mat-form-field 
+    appearance="outline"
+    class="column-input-field"
+    floatLabel="auto" 
+    [class.active]="!!control.value">
     <input matInput [formControl]="control" placeholder="Search...">
-    <button *ngIf="control.value" matSuffix mat-icon-button aria-label="Clear" (click)="clear()" tabindex="-1">
+    <button 
+        *ngIf="control.value"
+        matSuffix
+        mat-icon-button
+        aria-label="Clear" 
+        (click)="clear()" 
+        tabindex="-1" 
+        matTooltip="Clear">
         <mat-icon>close</mat-icon>
     </button>
 </mat-form-field>
