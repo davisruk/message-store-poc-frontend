@@ -7,10 +7,12 @@ import { searchMessages, updateColumnSearch } from '../state/message.actions';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-columns-search-input',
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule,MatButtonModule],
   templateUrl: './columns-search-input.component.html',
   styleUrl: './columns-search-input.component.css'
 })
@@ -32,6 +34,12 @@ export class ColumnsSearchInputComponent {
       this.store.dispatch(updateColumnSearch({ field: this.field, value: value }));
       this.store.dispatch(searchMessages());
     });
+  }
+
+  clear() {
+    this.control.setValue('');
+    this.store.dispatch(updateColumnSearch({ field: this.field, value: '' }));
+    this.store.dispatch(searchMessages());
   }
 }
 
