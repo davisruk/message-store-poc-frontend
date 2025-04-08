@@ -45,3 +45,12 @@ export const addSelectedMessage = createAction (
     '[Message] Add Selected Message',
     props<{ message: Message }>()
 );
+
+export const updateColumnSearch = createAction (
+    '[Column Filter] Update Column Search',
+    props<{ field: string, value: string }>()
+);
+
+export const clearColumnSearch = createAction (
+    '[Column Filter] Clear Selected Messages'
+);

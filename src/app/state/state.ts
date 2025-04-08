@@ -26,6 +26,7 @@ export interface MessageState {
     selectedMessages: Message[];
     query: string;
     includePayload: boolean;
+    columnSearch: Record<string, string>;
 }
 
 const initialPaginatedMessagesState: PaginatedMessageSummary = {
@@ -41,5 +42,6 @@ export const initialMessageState: MessageState = {
     error: null,
     selectedMessages: [],
     query: '',
-    includePayload: false
+    includePayload: false,
+    columnSearch: {}
 }

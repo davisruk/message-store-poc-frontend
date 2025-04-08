@@ -50,3 +50,7 @@ export const selectIncludePayload = createSelector(
   state => state.includePayload
 );
 
+export const selectColumnSearch = createSelector(
+  selectMessageState,
+  state => state.columnSearch
+);

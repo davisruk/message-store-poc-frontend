@@ -71,4 +71,16 @@ export const messageReducer = createReducer(
             ...state,
             selectedMessages: updated
         };
+    }),
+    on(MessageActions.updateColumnSearch, (state, { field, value }) => ({
+        ...state,
+        columnSearch: {
+            ...state.columnSearch,
+            [field]: value
+        }
+    })),
+    on(MessageActions.clearColumnSearch, (state) => ({
+        ...state,
+        columnSearch: {}
     }))
+);

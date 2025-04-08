@@ -9,10 +9,11 @@ import { CommonModule } from '@angular/common';
 import { selectError, selectLoading, selectMessageSummaries, selectPaginatedMessageSummaries, selectSelectedMessages } from '../state/message.selectors';
 import { Component, DestroyRef, inject, ViewChild } from '@angular/core';
 import { safeSubscribe } from '../utils/rx-helpers';
+import { ColumnsSearchInputComponent } from '../columns-search-input/columns-search-input.component';
 
 @Component({
   selector: 'app-message-list',
-  imports: [CommonModule, MatPaginatorModule, MatIconModule, MatTableModule],
+  imports: [CommonModule, MatPaginatorModule, MatIconModule, MatTableModule, ColumnsSearchInputComponent],
   templateUrl: './message-list.component.html',
   styleUrl: './message-list.component.css'
 })

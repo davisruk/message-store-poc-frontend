@@ -4,7 +4,7 @@ import { map, catchError, of, switchMap, withLatestFrom } from "rxjs";
 import { loadMessage, loadMessageSuccess, loadMessageFailure, searchMessages, searchMessagesSuccess, searchMessagesFailure, addSelectedMessage } from "./message.actions";
 import { MessageApiService } from "../services/message-api.service";
 import { Store } from "@ngrx/store";
-import { selectIncludePayload, selectPageNumber, selectPageSize, selectQuery } from "./message.selectors";
+import { selectColumnSearch, selectIncludePayload, selectPageNumber, selectPageSize, selectQuery } from "./message.selectors";
 
 @Injectable()
 export class MessageEffects {
@@ -30,10 +30,11 @@ export class MessageEffects {
             this.store.select(selectQuery),
             this.store.select(selectIncludePayload),
             this.store.select(selectPageNumber),
-            this.store.select(selectPageSize) 
+            this.store.select(selectPageSize),
+            this.store.select(selectColumnSearch) 
         ),
-        switchMap(([action, query, includePayload, pageNumber, pageSize]) =>
-            this.messageService.searchMessages(query, includePayload, pageNumber, pageSize).pipe(
+        switchMap(([action, query, includePayload, pageNumber, pageSize, columnSearch]) =>
+            this.messageService.searchMessages(query, includePayload, pageNumber, pageSize, columnSearch).pipe(
                 map(paginatedMessages => searchMessagesSuccess({ paginatedMessages })),
                 catchError(error => of(searchMessagesFailure({ error: error.message })))
             ))

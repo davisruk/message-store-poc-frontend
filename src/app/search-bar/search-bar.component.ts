@@ -3,7 +3,7 @@ import { Component, DestroyRef, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { combineLatestWith, debounceTime, distinctUntilChanged, filter, startWith } from 'rxjs';
-import { searchMessages, updateSearchCriteria } from '../state/message.actions';
+import { clearColumnSearch, searchMessages, updateSearchCriteria } from '../state/message.actions';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -34,6 +34,7 @@ export class SearchBarComponent {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(([query, includePayload]) => { // subscribe to the combined values
+            this.store.dispatch(clearColumnSearch()); // clear the column search when the query changes
             this.store.dispatch(updateSearchCriteria({ query, includePayload })); // dispatch the updateSearchCriteria action
             this.store.dispatch(searchMessages());
           });
