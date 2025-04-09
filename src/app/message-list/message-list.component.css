@@ -22,6 +22,35 @@
   font-size: 0.85rem; /* Adjust font size for better readability */
 }
 
+::ng-deep .filter-row {
+  position: sticky;
+  top: 56px; 
+  z-index: 10;
+  background-color: white; /* ensure it's above table rows */
+}
+
+::ng-deep .mat-header-row.filter-row {
+  position: sticky;
+  top: 56px; /* adjust based on actual header height */
+  z-index: 10;
+  background-color: white;
+  border-bottom: 1px solid #ccc;
+}
+
+::ng-deep .mat-header-row:not(.filter-row) {
+  position: sticky;
+  top: 0;
+  z-index: 11;
+  background-color: white;
+}
+
+.table-container {
+  max-height: 600px; /* adjust to your layout */
+  overflow-y: auto;
+  display: block;
+  overflow-x: hidden;
+}
+
 :host {
   display: block;
   background: white;

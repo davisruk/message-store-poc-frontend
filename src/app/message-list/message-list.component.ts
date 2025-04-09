@@ -31,6 +31,7 @@ export class MessageListComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   
   displayedColumns: string[] = ['id', 'source', 'destination', 'correlation', 'tech'];
+  filterColumns = ['id_filter', 'source_filter', 'destination_filter', 'correlation_filter', 'tech_filter'];
   selectedRow: MessageSummary | null = null;
   
   constructor() {
