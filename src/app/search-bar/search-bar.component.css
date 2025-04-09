@@ -8,3 +8,19 @@
   .search-input {
     width: 300px;
   }
+
+  .global-search-field {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 1rem;
+  }
+
+  ::ng-deep .column-input-field.active button[mat-icon-button] {
+    color: rgba(25, 118, 210, 0.8); /* match primary palette */
+    opacity: 0.9;
+    transition: color 200ms ease-in;
+  }
+  
+  ::ng-deep .column-input-field button[mat-icon-button]:hover {
+    opacity: 1;
+  }

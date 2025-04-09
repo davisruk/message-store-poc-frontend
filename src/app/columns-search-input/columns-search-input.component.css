@@ -26,3 +26,9 @@
 ::ng-deep .column-input-field button[mat-icon-button]:hover {
   opacity: 1;
 }
+
+::ng-deep button[mat-icon-button] {
+  background: none;
+  border: none;
+  box-shadow: none;
+}

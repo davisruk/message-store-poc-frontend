@@ -8,10 +8,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-search-bar',
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatCheckboxModule],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatIconModule],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css'
 })
@@ -39,5 +40,9 @@ export class SearchBarComponent {
             this.store.dispatch(searchMessages());
           });
     };
+
+    clearSearch(): void {
+      this.searchControl.setValue('');
+    }
 }
 

@@ -1,10 +1,18 @@
 <div class="search-bar">
-    <mat-form-field appearance="fill" class="search-input">
+    <mat-form-field appearance="fill" class="global-search-field column-input-field" [class.active]="!!searchControl.value">
       <mat-label>Search messages</mat-label>
-      <input matInput [formControl]="searchControl" />
-    </mat-form-field>
-  
-    <mat-checkbox [formControl]="includePayloadControl">
+      <input matInput [formControl]="searchControl" type="text"/>
+      <button
+        *ngIf="searchControl.value"
+        mat-icon-button
+        matSuffix
+        (click)="clearSearch()"
+        tabindex="-1"
+        matTooltip="Clear">
+        <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <mat-checkbox [formControl]="includePayloadControl">
       Include Payload
     </mat-checkbox>
 </div>
