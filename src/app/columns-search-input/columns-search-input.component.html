@@ -3,7 +3,8 @@
     class="column-input-field"
     floatLabel="auto" 
     [class.active]="!!control.value">
-    <input matInput [formControl]="control" placeholder="Search...">
+    <mat-label>{{ label }}</mat-label>
+    <input matInput [formControl]="control" [placeholder]="label" class="column-search-input">
     <button 
         *ngIf="control.value"
         matSuffix

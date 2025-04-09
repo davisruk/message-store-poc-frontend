@@ -18,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class ColumnsSearchInputComponent {
   @Input() field!: string;
+  @Input() label: string = '';
 
   private store = inject(Store);
   private destroyRef = inject(DestroyRef);
@@ -34,6 +35,12 @@ export class ColumnsSearchInputComponent {
       this.store.dispatch(updateColumnSearch({ field: this.field, value: value }));
       this.store.dispatch(searchMessages());
     });
+  }
+
+  ngOnInit(){
+    if (!this.label) {
+      this.label = this.field;
+    }
   }
 
   clear() {
