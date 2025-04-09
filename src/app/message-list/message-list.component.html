@@ -1,67 +1,70 @@
 <div *ngIf="loading$ | async">Loading...</div>
 <div *ngIf="error$ | async as error">Error: {{ error }}</div>
-<div class="table-container">
-  <ng-container *ngIf="selectedMessages$ | async as selectedMessages"> 
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 message-summary-table">
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef class="column-label"> ID </th>
-      <td mat-cell *matCellDef="let message"> {{ message.messageId }} </td>
-    </ng-container>
-    <ng-container matColumnDef="id_filter">
-      <th mat-header-cell *matHeaderCellDef class="column-filter">
-        <app-columns-search-input field="messageId"></app-columns-search-input>
-      </th>
-    </ng-container>
-    <ng-container matColumnDef="source">
-      <th mat-header-cell *matHeaderCellDef class="column-label"> Source </th>
-      <td mat-cell *matCellDef="let message"> {{ message.sourceSystem }} </td>
-    </ng-container>
-    <ng-container matColumnDef="source_filter">
-      <th mat-header-cell *matHeaderCellDef class="column-filter">
-        <app-columns-search-input field="sourceSystem"></app-columns-search-input>
-      </th>
-    </ng-container>
-    <ng-container matColumnDef="destination">
-      <th mat-header-cell *matHeaderCellDef class="column-label"> Destination </th>
-      <td mat-cell *matCellDef="let message"> {{ message.destinationAddress }} </td>
-    </ng-container>
-    <ng-container matColumnDef="destination_filter">  
-      <th mat-header-cell *matHeaderCellDef class="column-filter">
-        <app-columns-search-input field="destinationAddress"></app-columns-search-input>
-      </th>
-    </ng-container>
-    <ng-container matColumnDef="correlation">
-      <th mat-header-cell *matHeaderCellDef class="column-label"> CorrelationID </th>
-      <td mat-cell *matCellDef="let message"> {{ message.correlationId }} </td>
-    </ng-container>
-    <ng-container matColumnDef="correlation_filter">  
-      <th mat-header-cell *matHeaderCellDef class="column-filter">
-        <app-columns-search-input field="correlationId"></app-columns-search-input>
-      </th>        
-    </ng-container>
-    <ng-container matColumnDef="tech">
-      <th mat-header-cell *matHeaderCellDef class="column-label"> Format </th>
-      <td mat-cell *matCellDef="let message"> {{ message.messageRenderTechnology }} </td>
-    </ng-container>
-    <ng-container matColumnDef="tech_filter">
-      <th mat-header-cell *matHeaderCellDef class="column-filter">
-        <app-columns-search-input field="messageRenderTechnology"></app-columns-search-input>
-      </th>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-header-row *matHeaderRowDef="filterColumns; sticky: true" class="filter-row"></tr>
-    <tr mat-row 
-      (click)="tableRowClicked(row)"
-      *matRowDef="let row; columns: displayedColumns;"
-      [class.selected-row]="isSelected(row, selectedMessages)">
-      </tr>
-  </table>
-</ng-container>
+<div class="table-wrapper">
+  <div class="table-container">
+    <ng-container *ngIf="selectedMessages$ | async as selectedMessages"> 
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 message-summary-table">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef class="column-label"> ID </th>
+        <td mat-cell *matCellDef="let message"> {{ message.messageId }} </td>
+      </ng-container>
+      <ng-container matColumnDef="id_filter">
+        <th mat-header-cell *matHeaderCellDef class="column-filter">
+          <app-columns-search-input field="messageId"></app-columns-search-input>
+        </th>
+      </ng-container>
+      <ng-container matColumnDef="source">
+        <th mat-header-cell *matHeaderCellDef class="column-label"> Source </th>
+        <td mat-cell *matCellDef="let message"> {{ message.sourceSystem }} </td>
+      </ng-container>
+      <ng-container matColumnDef="source_filter">
+        <th mat-header-cell *matHeaderCellDef class="column-filter">
+          <app-columns-search-input field="sourceSystem"></app-columns-search-input>
+        </th>
+      </ng-container>
+      <ng-container matColumnDef="destination">
+        <th mat-header-cell *matHeaderCellDef class="column-label"> Destination </th>
+        <td mat-cell *matCellDef="let message"> {{ message.destinationAddress }} </td>
+      </ng-container>
+      <ng-container matColumnDef="destination_filter">  
+        <th mat-header-cell *matHeaderCellDef class="column-filter">
+          <app-columns-search-input field="destinationAddress"></app-columns-search-input>
+        </th>
+      </ng-container>
+      <ng-container matColumnDef="correlation">
+        <th mat-header-cell *matHeaderCellDef class="column-label"> CorrelationID </th>
+        <td mat-cell *matCellDef="let message"> {{ message.correlationId }} </td>
+      </ng-container>
+      <ng-container matColumnDef="correlation_filter">  
+        <th mat-header-cell *matHeaderCellDef class="column-filter">
+          <app-columns-search-input field="correlationId"></app-columns-search-input>
+        </th>        
+      </ng-container>
+      <ng-container matColumnDef="tech">
+        <th mat-header-cell *matHeaderCellDef class="column-label"> Format </th>
+        <td mat-cell *matCellDef="let message"> {{ message.messageRenderTechnology }} </td>
+      </ng-container>
+      <ng-container matColumnDef="tech_filter">
+        <th mat-header-cell *matHeaderCellDef class="column-filter">
+          <app-columns-search-input field="messageRenderTechnology"></app-columns-search-input>
+        </th>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-header-row *matHeaderRowDef="filterColumns; sticky: true" class="filter-row"></tr>
+      <tr mat-row 
+        (click)="tableRowClicked(row)"
+        *matRowDef="let row; columns: displayedColumns;"
+        [class.selected-row]="isSelected(row, selectedMessages)">
+        </tr>
+    </table>
+  </ng-container>
+  </div>
   <mat-paginator *ngIf="(pagination$ | async) as pagination"
                   [length]="pagination.totalElements"
                   [pageSize]="pagination.pageSize"
                   [pageSizeOptions]="[3, 5, 10, 25]"
                   [showFirstLastButtons]="true"
-                  (page)="page($event)">
+                  (page)="page($event)"
+                  class="sticky-paginator">
   </mat-paginator>
 </div>
