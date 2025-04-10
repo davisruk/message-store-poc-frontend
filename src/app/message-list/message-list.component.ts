@@ -11,6 +11,8 @@ import { Component, DestroyRef, inject, ViewChild, ViewChildren, QueryList } fro
 import { safeSubscribe } from '../utils/rx-helpers';
 import { ColumnsSearchInputComponent } from '../columns-search-input/columns-search-input.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { ColumnField, DesktopColumns, HandsetColumns, TabletColumns } from './column-fields';
+
 @Component({
   selector: 'app-message-list',
   imports: [CommonModule, MatPaginatorModule, MatIconModule, MatTableModule, ColumnsSearchInputComponent],
@@ -32,7 +34,14 @@ export class MessageListComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChildren(ColumnsSearchInputComponent) columnSearchInputs!: QueryList<ColumnsSearchInputComponent>;
   
-  displayedColumns: string[] = ['id', 'source', 'destination', 'correlation', 'tech'];
+  ColumnField = ColumnField;
+  displayedColumns: string[] = [
+    ColumnField.ID,
+    ColumnField.SOURCE,
+    ColumnField.DESTINATION,
+    ColumnField.CORRELATION,
+    ColumnField.MESSAGE_RENDER_TECHNOLOGY
+  ];
  
   selectedRow: MessageSummary | null = null;
   
@@ -67,46 +76,46 @@ export class MessageListComponent {
       }
     });
 
-    safeSubscribe(
-      this.breakpointObserver.observe(Breakpoints.Tablet), this.destroyRef,
-      result => {
-        if (result.matches) {
-          this.displayedColumns = ['id', 'source', 'destination', 'correlation'];
-          this.clearField('messageRenderTechnology');
-        } else {
-          this.displayedColumns = ['id', 'source', 'destination', 'correlation', 'tech'];
+    
+    // Media breakpoints to keep the state consistent if a column is removed from the table
+    // If a column is removed then its input must be cleared and the list refreshed
+    // Tried this with a single subscription but it was messy and hard to read
+    safeSubscribe(this.breakpointObserver.observe([Breakpoints.Handset]), this.destroyRef, result => {
+        if (result.matches){
+          setTimeout(() => {
+            console.log('Handset breakpoint matched');
+            this.displayedColumns = HandsetColumns;
+            this.clearHiddenFields();
+          });
         }
-      }
-    );
+      });
 
-    safeSubscribe(this.breakpointObserver.observe([Breakpoints.Handset,
-      Breakpoints.Tablet,
-      Breakpoints.Web]), this.destroyRef,
-      result => {
-        const matchingBreakpoints = Object.entries(result.breakpoints)
-          .filter(([_, value]) => value)
-          .map(([key]) => key);
-          this.displayedColumns = this.getColumnsForBreakpoint(matchingBreakpoints);
-          if (result.breakpoints[Breakpoints.Handset]) {
-            this.clearField('destinationAddress');
-            this.clearField('messageRenderTechnology');
-          } else if (result.breakpoints[Breakpoints.Tablet]) {
-          this.clearField('messageRenderTechnology');
-        }
+    safeSubscribe(this.breakpointObserver.observe([Breakpoints.Tablet]), this.destroyRef, result => {
+      if (result.matches){
+        setTimeout(() => {
+          console.log('Tablet breakpoint matched');
+          this.displayedColumns = TabletColumns;
+          this.clearHiddenFields();
+        });
       }
-   );    
+    });
+      
+    safeSubscribe(this.breakpointObserver.observe([Breakpoints.Web]), this.destroyRef, result => {
+      if (result.matches){
+        setTimeout(() => {
+          console.log('Desktop breakpoint matched');
+          this.displayedColumns = DesktopColumns;
+          this.clearHiddenFields();
+        });
+      }
+    });
   }
 
-  getColumnsForBreakpoint(bp: string[]): string[] {
-    if (bp.includes(Breakpoints.Handset)) {
-      return ['id', 'source', 'correlation'];
-    } else if (bp.includes(Breakpoints.Tablet)) {
-      return ['id', 'source', 'destination', 'correlation'];
-    } else {
-      return ['id', 'source', 'destination', 'correlation', 'tech'];
-    }
+  clearHiddenFields() {
+    const allFields = Object.values(ColumnField);
+    const hiddenFields = allFields.filter(field => !this.displayedColumns.includes(field));
+    hiddenFields.forEach(field => this.clearField(field));
   }
-  
   clearField(field: string) {
     const input = this.columnSearchInputs.find(input => input.field === field)
     input?.clear();

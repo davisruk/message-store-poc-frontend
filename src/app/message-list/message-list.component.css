@@ -76,18 +76,25 @@
   white-space: nowrap;
 }
 
-@media (max-width: 800px) {
-  .mat-column-destination{
+/* Handset: < 600px */
+@media (max-width: 599.98px) {
+  .mat-column-destinationAddress,
+  .mat-column-messageRenderTechnology {
     display: none;
   }
 }
 
-@media (max-width: 1024px) {
-  .mat-column-tech{
+/* Tablet: 600px - 839.99px */
+@media (min-width: 600px) and (max-width: 839.98px) {
+  .mat-column-messageRenderTechnology {
     display: none;
   }
 }
 
+/* Web: >= 840px */
+@media (min-width: 840px) {
+  /* All columns visible */
+}
 
 .sticky-paginator {
   position: sticky;
