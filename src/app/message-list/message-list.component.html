@@ -36,7 +36,6 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-<!--      <tr mat-header-row *matHeaderRowDef="filterColumns; sticky: true" class="filter-row"></tr> -->
       <tr mat-row 
         (click)="tableRowClicked(row)"
         *matRowDef="let row; columns: displayedColumns;"

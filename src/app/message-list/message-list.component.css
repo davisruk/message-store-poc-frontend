@@ -53,10 +53,41 @@
 }
 
 .table-container {
+  overflow-x: auto;
   overflow-y: auto;
   flex-grow: 1;
   min-height: 200px;
+  width: 100%;
 }
+
+.mat-mdc-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.mat-mdc-cell{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-mdc-header-cell {
+  white-space: nowrap;
+}
+
+@media (max-width: 800px) {
+  .mat-column-destination{
+    display: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .mat-column-tech{
+    display: none;
+  }
+}
+
 
 .sticky-paginator {
   position: sticky;
@@ -69,8 +100,8 @@
 
 :host {
   display: block;
-  background: white;
+  background: transparent;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  border-radius: 4px;
-  padding: 8px;
+  padding: 0px;
+  margin: 0px;
 }

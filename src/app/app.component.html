@@ -2,7 +2,14 @@
 <h1>Messages</h1>
 <div class="layout-container">
     <app-search-bar></app-search-bar>
-    <app-message-list></app-message-list>
+    <mat-accordion>
+        <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>Messages</mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-message-list></app-message-list>
+        </mat-expansion-panel> 
+    </mat-accordion>
     <div class="message-detail-container">
         <ng-container *ngIf="selectedMessages$ | async as selectedMessages">
             <app-message [messageIndex]="0"></app-message>

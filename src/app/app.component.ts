@@ -7,6 +7,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { selectSelectedMessages } from './state/message.selectors';
 import { Observable, startWith } from 'rxjs';
 import { Message } from './state/state';
+import { MatExpansionModule } from '@angular/material/expansion';
 @Component({
   selector: 'app-root',
   imports: [
@@ -14,7 +15,8 @@ import { Message } from './state/state';
     MessageListComponent,
     MessageComponent,
     SearchBarComponent,
-    AsyncPipe
+    AsyncPipe,
+    MatExpansionModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

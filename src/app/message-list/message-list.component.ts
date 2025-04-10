@@ -7,10 +7,10 @@ import { Store } from '@ngrx/store';
 import { loadMessage, paginatorUpdate, searchMessages } from '../state/message.actions';
 import { CommonModule } from '@angular/common';
 import { selectError, selectLoading, selectMessageSummaries, selectPaginatedMessageSummaries, selectSelectedMessages } from '../state/message.selectors';
-import { Component, DestroyRef, inject, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { safeSubscribe } from '../utils/rx-helpers';
 import { ColumnsSearchInputComponent } from '../columns-search-input/columns-search-input.component';
-
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 @Component({
   selector: 'app-message-list',
   imports: [CommonModule, MatPaginatorModule, MatIconModule, MatTableModule, ColumnsSearchInputComponent],
@@ -21,6 +21,7 @@ export class MessageListComponent {
 
   private store = inject(Store);
   private destroyRef = inject(DestroyRef);
+  private breakpointObserver = inject(BreakpointObserver);
 
   pagination$: Observable<PaginatedMessageSummary | null>;
   messageSummaries$: Observable<MessageSummary[] | null>;
@@ -29,9 +30,10 @@ export class MessageListComponent {
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChildren(ColumnsSearchInputComponent) columnSearchInputs!: QueryList<ColumnsSearchInputComponent>;
   
   displayedColumns: string[] = ['id', 'source', 'destination', 'correlation', 'tech'];
-  filterColumns = ['id_filter', 'source_filter', 'destination_filter', 'correlation_filter', 'tech_filter'];
+ 
   selectedRow: MessageSummary | null = null;
   
   constructor() {
@@ -64,6 +66,50 @@ export class MessageListComponent {
           this.paginator.length = pagination.totalElements;
       }
     });
+
+    safeSubscribe(
+      this.breakpointObserver.observe(Breakpoints.Tablet), this.destroyRef,
+      result => {
+        if (result.matches) {
+          this.displayedColumns = ['id', 'source', 'destination', 'correlation'];
+          this.clearField('messageRenderTechnology');
+        } else {
+          this.displayedColumns = ['id', 'source', 'destination', 'correlation', 'tech'];
+        }
+      }
+    );
+
+    safeSubscribe(this.breakpointObserver.observe([Breakpoints.Handset,
+      Breakpoints.Tablet,
+      Breakpoints.Web]), this.destroyRef,
+      result => {
+        const matchingBreakpoints = Object.entries(result.breakpoints)
+          .filter(([_, value]) => value)
+          .map(([key]) => key);
+          this.displayedColumns = this.getColumnsForBreakpoint(matchingBreakpoints);
+          if (result.breakpoints[Breakpoints.Handset]) {
+            this.clearField('destinationAddress');
+            this.clearField('messageRenderTechnology');
+          } else if (result.breakpoints[Breakpoints.Tablet]) {
+          this.clearField('messageRenderTechnology');
+        }
+      }
+   );    
+  }
+
+  getColumnsForBreakpoint(bp: string[]): string[] {
+    if (bp.includes(Breakpoints.Handset)) {
+      return ['id', 'source', 'correlation'];
+    } else if (bp.includes(Breakpoints.Tablet)) {
+      return ['id', 'source', 'destination', 'correlation'];
+    } else {
+      return ['id', 'source', 'destination', 'correlation', 'tech'];
+    }
+  }
+  
+  clearField(field: string) {
+    const input = this.columnSearchInputs.find(input => input.field === field)
+    input?.clear();
   }
 
   load() {
