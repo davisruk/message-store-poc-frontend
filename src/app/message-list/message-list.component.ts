@@ -116,6 +116,7 @@ export class MessageListComponent {
     const hiddenFields = allFields.filter(field => !this.displayedColumns.includes(field));
     hiddenFields.forEach(field => this.clearField(field));
   }
+  
   clearField(field: string) {
     const input = this.columnSearchInputs.find(input => input.field === field)
     input?.clear();
