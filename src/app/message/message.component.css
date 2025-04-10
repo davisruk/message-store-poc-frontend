@@ -10,3 +10,9 @@ mat-card-content {
   overflow-wrap: break-word;
   font-family: monospace;
 }
+
+:host {
+  display: block;
+  flex: 1;
+  min-width: 0; /* important for flex containers */
+}

@@ -8,6 +8,7 @@ import { selectSelectedMessages } from './state/message.selectors';
 import { Observable, startWith } from 'rxjs';
 import { Message } from './state/state';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'app-root',
   imports: [
@@ -17,6 +18,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     SearchBarComponent,
     AsyncPipe,
     MatExpansionModule,
+    MatIcon
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
@@ -26,4 +28,24 @@ export class AppComponent {
     startWith([]) // Emit an empty array as the default value
   );
   title = 'message-store-poc-frontend';
+  isMaximized = false;
+  panelExpanded = true;
+
+  toggleMaximize() {
+    this.isMaximized = !this.isMaximized;
+    if (this.isMaximized) {
+      this.panelExpanded = true;
+    }
+  }
+
+  onMaximizeClick(event: MouseEvent){
+    event.stopPropagation(); // Prevent the click event from propagating to the parent element
+    this.toggleMaximize();
+  }
+
+  onHeaderClick(event: MouseEvent): void {
+    if (this.isMaximized) {
+      event.stopPropagation(); // stop header click from toggling expansion
+    }
+  }
 }

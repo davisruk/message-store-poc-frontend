@@ -1,4 +1,5 @@
 .layout-container {
+    min-height: 100vh; 
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -8,8 +9,71 @@
   }
   .message-detail-container {
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 16px;
-    align-items: flex-start;
-    margin-top: 16px;
-    flex-wrap: wrap; /* optional, ensures wrapping on narrow screens */
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .message-container {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+  }
+  
+  .message-container app-message {
+    flex: 1;
+  }
+  
+  ::ng-deep .mat-expansion-panel.maximized {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 16px;
+    z-index: 1000;
+    background: white;
+    overflow: auto;
+  }
+  
+  ::ng-deep .mat-expansion-panel.maximized .mat-expansion-panel-header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1001;
+  }
+  ::ng-deep .mat-expansion-panel.maximized .mat-expansion-panel-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+  }
+  .maximized {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 16px;
+    z-index: 1000;
+    background: white;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .maximized .mat-expansion-panel-header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1001;
+  }
+  
+  .maximized .mat-expansion-panel-content {
+    flex-grow: 1;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
   }
