@@ -1,0 +1,11 @@
+<div class="detail-header">
+    <h2>Message Comparison</h2>
+    <button mat-icon-button (click)="restore()" aria-label="Restore to list">
+      <mat-icon>fullscreen_exit</mat-icon>
+    </button>
+  </div>
+  
+  <div class="detail-content" *ngIf="selectedMessages$ | async as selectedMessages">
+    <app-message [messageIndex]="0"></app-message>
+    <app-message *ngIf="selectedMessages.length > 1" [messageIndex]="1"></app-message>
+  </div>

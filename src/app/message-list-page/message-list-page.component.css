@@ -1,0 +1,26 @@
+.layout-container {
+    min-height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  .message-detail-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .message-container {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+  }
+  
+  .message-container app-message {
+    flex: 1;
+  }

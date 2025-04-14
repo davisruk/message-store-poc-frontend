@@ -1,0 +1,35 @@
+<h1>Messages</h1>
+<div class="layout-container">
+    <app-search-bar></app-search-bar>
+    <mat-accordion>
+        <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>Messages</mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-message-list></app-message-list>
+        </mat-expansion-panel> 
+    </mat-accordion>
+
+    <mat-expansion-panel 
+        [expanded]="isMaximized || panelExpanded"
+        (opened)="panelExpanded = true"
+        (closed)="panelExpanded=false"
+        [hideToggle]="isMaximized"
+        [ngClass]="{ 'maximized': isMaximized }">
+        <mat-expansion-panel-header (click)="onHeaderClick($event)">
+            <mat-panel-title>Selected Messages</mat-panel-title>
+            <button
+                mat-icon-button
+                (click)="onMaximizeClick($event)"
+                [attr.aria-label]="isMaximized ? 'Restore' : 'Maximize'">
+                <mat-icon>{{ isMaximized ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+            </button>
+        </mat-expansion-panel-header>
+        <div class="message-detail-container">
+            <ng-container *ngIf="selectedMessages$ | async as selectedMessages">
+                <app-message [messageIndex]="0"></app-message>
+                <app-message *ngIf="selectedMessages.length > 1" [messageIndex]="1"></app-message>
+            </ng-container>
+        </div>
+    </mat-expansion-panel>
+</div>
