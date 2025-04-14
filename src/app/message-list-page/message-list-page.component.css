@@ -6,21 +6,31 @@
     padding: 16px;
     height: 100%;
     box-sizing: border-box;
-  }
-  .message-detail-container {
+}
+
+.message-detail-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 16px;
     width: 100%;
     box-sizing: border-box;
-  }
-  .message-container {
+}
+
+.message-container {
     display: flex;
     flex-direction: row;
     gap: 16px;
-  }
+}
   
-  .message-container app-message {
+.message-container app-message {
     flex: 1;
+}
+
+::ng-deep mat-expansion-panel-header button[mat-icon-button] {
+    cursor: pointer;
+}
+
+::ng-deep mat-expansion-panel-header button[mat-icon-button]:hover {
+    opacity: 0.85;
   }

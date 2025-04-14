@@ -27,4 +27,11 @@
     padding: 8px;
     background: #fafafa;
   }
-  
+
+.detail-header button[mat-icon-button] {
+    cursor: pointer;
+}
+
+.detail-header button[mat-icon-button]:hover {
+    opacity: 0.85;
+}
