@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { MessageState, PaginatedMessageSummary } from './state';
+import { ColumnField } from './column-fields';
 
 // Select the entire feature state
 export const selectMessageState = createFeatureSelector<MessageState>('messageState');
@@ -54,3 +55,13 @@ export const selectColumnSearch = createSelector(
   selectMessageState,
   state => state.columnSearch
 );
+
+export const selectSortDescriptors = createSelector(
+  selectColumnSearch,
+  state => Object.entries(state)
+    .map(([field,s]) => ({ field: field as ColumnField, ...s}))
+    .filter(s => s.sortDirection != null)
+    .sort((a, b) => (a.sortOrder! - b.sortOrder!))
+    .map(s => ({ field: s.field, sortDirection: s.sortDirection! }))
+  );
+

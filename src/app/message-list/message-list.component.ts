@@ -2,16 +2,16 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Observable, take } from 'rxjs';
-import { Message, MessageSummary, PaginatedMessageSummary } from '../state/state';
+import { ColumnState, Message, MessageSummary, PaginatedMessageSummary } from '../state/state';
 import { Store } from '@ngrx/store';
-import { loadMessage, paginatorUpdate, searchMessages } from '../state/message.actions';
+import { loadMessage, paginatorUpdate, searchMessages, toggleSort } from '../state/message.actions';
 import { CommonModule } from '@angular/common';
-import { selectError, selectLoading, selectMessageSummaries, selectPaginatedMessageSummaries, selectSelectedMessages } from '../state/message.selectors';
+import { selectColumnSearch, selectError, selectLoading, selectMessageSummaries, selectPaginatedMessageSummaries, selectSelectedMessages } from '../state/message.selectors';
 import { Component, DestroyRef, inject, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { safeSubscribe } from '../utils/rx-helpers';
 import { ColumnsSearchInputComponent } from '../columns-search-input/columns-search-input.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { ColumnField, DesktopColumns, HandsetColumns, TabletColumns } from './column-fields';
+import { ColumnField, DesktopColumns, HandsetColumns, TabletColumns } from '../state/column-fields';
 
 @Component({
   selector: 'app-message-list',
@@ -31,6 +31,8 @@ export class MessageListComponent {
   dataSource = new MatTableDataSource<MessageSummary>();
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
+  columnState$: Observable<Record<ColumnField, ColumnState>>;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChildren(ColumnsSearchInputComponent) columnSearchInputs!: QueryList<ColumnsSearchInputComponent>;
   
@@ -51,6 +53,7 @@ export class MessageListComponent {
     this.loading$ = this.store.select(selectLoading);
     this.error$ = this.store.select(selectError);
     this.selectedMessages$ = this.store.select(selectSelectedMessages);
+    this.columnState$ = this.store.select(selectColumnSearch);
   }
 
   ngOnInit() {
@@ -143,5 +146,10 @@ export class MessageListComponent {
 
   isSelected(row: MessageSummary, selected: Message[]): boolean {
     return selected.some((message) => message.id === row.id);
+  }
+
+  toggleSortClicked(field: ColumnField) {
+    this.store.dispatch(toggleSort({ field }));
+    this.store.dispatch(searchMessages());
   }
 }

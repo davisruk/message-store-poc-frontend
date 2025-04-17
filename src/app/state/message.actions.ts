@@ -1,6 +1,7 @@
 import { createAction, props } from "@ngrx/store";
 import { Message, PaginatedMessageSummary } from "./state";
 import { PageEvent } from "@angular/material/paginator";
+import { ColumnField } from "./column-fields";
 
 export const paginatorUpdate = createAction (
     '[Message List] Paginator Update',
@@ -48,9 +49,14 @@ export const addSelectedMessage = createAction (
 
 export const updateColumnSearch = createAction (
     '[Column Filter] Update Column Search',
-    props<{ field: string, value: string }>()
+    props<{ field: string, filter: string }>()
 );
 
 export const clearColumnSearch = createAction (
     '[Column Filter] Clear Selected Messages'
+);
+
+export const toggleSort = createAction (
+    '[Sort] Sort Toggle',
+    props<{ field: ColumnField }>()
 );

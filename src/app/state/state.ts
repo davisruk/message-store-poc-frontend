@@ -1,3 +1,5 @@
+import { ColumnField } from "./column-fields";
+
 export interface MessageSummary {
     id: string;
     sourceSystem: string;
@@ -9,6 +11,14 @@ export interface MessageSummary {
 
 export interface Message extends MessageSummary {
     payload: string;
+}
+
+export type SortDirection = 'asc' | 'desc';
+
+export interface ColumnState {
+    filter: string;
+    sortDirection?: SortDirection;
+    sortOrder?: number;
 }
 
 export interface PaginatedMessageSummary {
@@ -26,7 +36,7 @@ export interface MessageState {
     selectedMessages: Message[];
     query: string;
     includePayload: boolean;
-    columnSearch: Record<string, string>;
+    columnSearch: Record<string, ColumnState>;
 }
 
 const initialPaginatedMessagesState: PaginatedMessageSummary = {
@@ -36,6 +46,14 @@ const initialPaginatedMessagesState: PaginatedMessageSummary = {
     pageNumber: 0,
     pageSize: 3
 }
+
+const initialColumnState: Record<ColumnField, ColumnState> = 
+    Object.values(ColumnField).reduce((acc, field) => {
+        acc[field] = { filter: '' };
+        return acc;
+    }, {} as Record<ColumnField, ColumnState>);
+
+
 export const initialMessageState: MessageState = {
     paginatedMessages: initialPaginatedMessagesState,
     loading: false,
@@ -43,5 +61,5 @@ export const initialMessageState: MessageState = {
     selectedMessages: [],
     query: '',
     includePayload: false,
-    columnSearch: {}
+    columnSearch: initialColumnState,
 }

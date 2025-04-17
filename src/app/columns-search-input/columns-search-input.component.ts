@@ -32,7 +32,7 @@ export class ColumnsSearchInputComponent {
       map (value => value ?? ''), // Ensure value is not null
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(value => {
-      this.store.dispatch(updateColumnSearch({ field: this.field, value: value }));
+      this.store.dispatch(updateColumnSearch({ field: this.field, filter: value }));
       this.store.dispatch(searchMessages());
     });
   }
@@ -45,7 +45,7 @@ export class ColumnsSearchInputComponent {
 
   clear() {
     this.control.setValue('');
-    this.store.dispatch(updateColumnSearch({ field: this.field, value: '' }));
+    this.store.dispatch(updateColumnSearch({ field: this.field, filter: '' }));
     this.store.dispatch(searchMessages());
   }
 }

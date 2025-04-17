@@ -105,6 +105,25 @@
   box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
 }
 
+.sort-btn {
+  padding: 0;
+  margin-left: 4px;
+  vertical-align: middle;
+  cursor: pointer;
+  color: rgba(0,0,0,0.54);
+}
+.sort-btn.active {
+  color: #002d72;
+}
+.sort-btn mat-icon {
+  font-size: 16px;
+}
+.sort-btn sup {
+  font-size: 10px;
+  vertical-align: super;
+  margin-left: 2px;
+}
+
 :host {
   display: block;
   background: transparent;

@@ -1,6 +1,7 @@
 import { createReducer, on } from "@ngrx/store";
-import { initialMessageState, Message } from "./state";
+import { ColumnState, initialMessageState, Message, SortDirection } from "./state";
 import * as MessageActions from './message.actions';
+import { ColumnField } from "./column-fields";
 
 export const messageReducer = createReducer(
     initialMessageState,
@@ -72,15 +73,52 @@ export const messageReducer = createReducer(
             selectedMessages: updated
         };
     }),
-    on(MessageActions.updateColumnSearch, (state, { field, value }) => ({
+    on(MessageActions.updateColumnSearch, (state, { field, filter }) => ({
         ...state,
         columnSearch: {
             ...state.columnSearch,
-            [field]: value
-        }
+            [field]: {
+                ...state.columnSearch[field],
+                filter,
+            }
+        },
+        paginatedMessages: { ...state.paginatedMessages!, pageNumber: 0 }
     })),
+    on(MessageActions.toggleSort, (state, { field }) => {
+        const entries = Object.entries(state.columnSearch) as [ColumnField, ColumnState][];
+        const sorted = entries
+            .filter(([_,s]) => s.sortDirection != null)
+            .sort((a,b) => (a[1].sortOrder! - b[1].sortOrder!));
+        
+        const current = state.columnSearch[field];
+        let nextDirection: SortDirection | undefined;
+        let nextOrder: number | undefined;
+        if(!current.sortDirection) {
+            nextDirection = 'asc';
+            nextOrder = sorted.length;
+        } else if (current.sortDirection === 'asc') {
+            nextDirection = 'desc';
+            nextOrder = current.sortOrder;
+        } else {
+            nextDirection = undefined;
+            nextOrder = undefined;
+        }
+        return {
+            ...state,
+            columnSearch: {
+                ...state.columnSearch,
+                [field]: {
+                    ...state.columnSearch[field],
+                    filter: state.columnSearch[field].filter,
+                    sortDirection: nextDirection,
+                    sortOrder: nextOrder
+                },
+            },
+            paginatedMessages: { ...state.paginatedMessages!, pageNumber: 0 }
+        }
+    }),
     on(MessageActions.clearColumnSearch, (state) => ({
         ...state,
-        columnSearch: {}
-    }))
+        columnSearch: initialMessageState.columnSearch
+    })),
 );
