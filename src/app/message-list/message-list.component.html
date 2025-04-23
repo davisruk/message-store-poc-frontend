@@ -1,110 +1,195 @@
-<div *ngIf="loading$ | async">Loading...</div>
-<div *ngIf="error$ | async as error">Error: {{ error }}</div>
+<!-- show loading / errors -->
+<div *ngIf="loading$ | async">Loading…</div>
+<div *ngIf="error$   | async as err">Error: {{ err }}</div>
+
 <div class="table-wrapper">
   <div class="table-container">
-    <ng-container *ngIf="selectedMessages$ | async as selectedMessages"> 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 message-summary-table">
-      <ng-container [matColumnDef]="ColumnField.ID">
-        <th mat-header-cell *matHeaderCellDef>
-          <app-columns-search-input [field]="ColumnField.ID" label="ID"></app-columns-search-input>
-          <button mat-icon-button class="sort-btn"
-            (click)="toggleSortClicked(ColumnField.ID)"
-            [class.active]="(columnState$ | async)?.[ColumnField.ID]?.sortDirection">
+	<ng-container *ngIf="selectedMessages$ | async as selectedMessages">
+		<table mat-table [dataSource]="dataSource"
+			   class="message-summary-table mat-elevation-z2">
+
+		  <!-- ID column -->
+		  <ng-container matColumnDef="messageId">
+			<th mat-header-cell *matHeaderCellDef class="column-search-header">
+        <div class="header-cell">
+          <app-columns-search-input
+            class="column-input-field"
+            [field]="ColumnField.ID"
+            label="ID">
+          </app-columns-search-input>
+          <ng-container *ngIf="(columnState$|async)?.[ColumnField.ID] as colState">
+            <button mat-icon-button
+              class="sort-btn"
+              (click)="toggleSortClicked(ColumnField.ID)"
+              [class.active]="(columnState$|async)?.[ColumnField.ID]?.sortDirection">
+              <mat-icon>
+                {{
+                (columnState$|async)?.[ColumnField.ID]?.sortDirection === 'desc'
+                  ? 'arrow_downward'
+                  : 'arrow_upward'
+                }}
+              </mat-icon>
+              <sup *ngIf="colState.sortOrder !== undefined">
+                {{ colState.sortOrder + 1}}
+              </sup>
+            </button>
+        </ng-container>
+        </div>
+			</th>
+			<td mat-cell *matCellDef="let msg">
+			  {{ msg.messageId }}
+			</td>
+		  </ng-container>
+
+		  <!-- SOURCE column -->
+		  <ng-container matColumnDef="sourceSystem">
+			<th mat-header-cell *matHeaderCellDef class="column-search-header">
+			  <div class="header-cell">
+        <app-columns-search-input
+				class="column-input-field"
+				[field]="ColumnField.SOURCE"
+				label="Source">
+			  </app-columns-search-input>
+			  <ng-container *ngIf="(columnState$|async)?.[ColumnField.SOURCE] as colState">
+          <button mat-icon-button
+              class="sort-btn"
+              (click)="toggleSortClicked(ColumnField.SOURCE)"
+              [class.active]="(columnState$|async)?.[ColumnField.SOURCE]?.sortDirection">
             <mat-icon>
-              {{ (columnState$|async)?.[ColumnField.ID]?.sortDirection==='desc'
-                ? 'arrow_downward' : 'arrow_upward' }}
+              {{
+              (columnState$|async)?.[ColumnField.SOURCE]?.sortDirection === 'desc'
+                ? 'arrow_downward'
+                : 'arrow_upward'
+              }}
             </mat-icon>
-            <sup *ngIf="(columnState$|async)?.[ColumnField.ID]?.sortOrder as n">
-              {{ n + 1 }}
-            </sup>
-          </button>          
-        </th>
-        <td mat-cell *matCellDef="let message"> {{ message.messageId }} </td>
-      </ng-container>
-      <ng-container [matColumnDef]="ColumnField.SOURCE">
-        <th mat-header-cell *matHeaderCellDef>
-          <app-columns-search-input [field]="ColumnField.SOURCE" label="Source"></app-columns-search-input>
-          <button mat-icon-button class="sort-btn"
-            (click)="toggleSortClicked(ColumnField.SOURCE)"
-            [class.active]="(columnState$ | async)?.[ColumnField.SOURCE]?.sortDirection">
-            <mat-icon>
-              {{ (columnState$|async)?.[ColumnField.SOURCE]?.sortDirection==='desc'
-                ? 'arrow_downward' : 'arrow_upward' }}
-            </mat-icon>
-            <sup *ngIf="(columnState$|async)?.[ColumnField.SOURCE]?.sortOrder as n">
-              {{ n + 1 }}
-            </sup>
-          </button>          
-        </th>        
-        <td mat-cell *matCellDef="let message"> {{ message.sourceSystem }} </td>
-      </ng-container>
-      <ng-container [matColumnDef]="ColumnField.DESTINATION">
-        <th mat-header-cell *matHeaderCellDef>
-          <app-columns-search-input [field]="ColumnField.DESTINATION" label="Destination"></app-columns-search-input>
-          <button mat-icon-button class="sort-btn"
-            (click)="toggleSortClicked(ColumnField.DESTINATION)"
-            [class.active]="(columnState$ | async)?.[ColumnField.DESTINATION]?.sortDirection">
-            <mat-icon>
-              {{ (columnState$|async)?.[ColumnField.DESTINATION]?.sortDirection==='desc'
-                ? 'arrow_downward' : 'arrow_upward' }}
-            </mat-icon>
-            <sup *ngIf="(columnState$|async)?.[ColumnField.DESTINATION]?.sortOrder as n">
-              {{ n + 1 }}
+            <sup *ngIf="colState.sortOrder !== undefined">
+              {{ colState.sortOrder + 1}}
             </sup>
           </button>
-        </th>
-        <td mat-cell *matCellDef="let message"> {{ message.destinationAddress }} </td>
-      </ng-container>
-      <ng-container [matColumnDef]="ColumnField.CORRELATION">
-        <th mat-header-cell *matHeaderCellDef>
-          <app-columns-search-input [field]="ColumnField.CORRELATION" label="Correlation ID"></app-columns-search-input>
-          <button mat-icon-button class="sort-btn"
-            (click)="toggleSortClicked(ColumnField.CORRELATION)"
-            [class.active]="(columnState$ | async)?.[ColumnField.CORRELATION]?.sortDirection">
-            <mat-icon>
-              {{ (columnState$|async)?.[ColumnField.CORRELATION]?.sortDirection==='desc'
-                ? 'arrow_downward' : 'arrow_upward' }}
-            </mat-icon>
-            <sup *ngIf="(columnState$|async)?.[ColumnField.CORRELATION]?.sortOrder as n">
-              {{ n + 1 }}
-            </sup>
-          </button> 
-        </th>
-        <td mat-cell *matCellDef="let message"> {{ message.correlationId }} </td>
-      </ng-container>
-      <ng-container [matColumnDef]="ColumnField.MESSAGE_RENDER_TECHNOLOGY">
-        <th mat-header-cell *matHeaderCellDef>
-          <app-columns-search-input [field]="ColumnField.MESSAGE_RENDER_TECHNOLOGY" label="Payload Type"></app-columns-search-input>
-          <button mat-icon-button class="sort-btn"
-            (click)="toggleSortClicked(ColumnField.MESSAGE_RENDER_TECHNOLOGY)"
-            [class.active]="(columnState$ | async)?.[ColumnField.MESSAGE_RENDER_TECHNOLOGY]?.sortDirection">
-            <mat-icon>
-              {{ (columnState$|async)?.[ColumnField.MESSAGE_RENDER_TECHNOLOGY]?.sortDirection==='desc'
-                ? 'arrow_downward' : 'arrow_upward' }}
-            </mat-icon>
-            <sup *ngIf="(columnState$|async)?.[ColumnField.MESSAGE_RENDER_TECHNOLOGY]?.sortOrder as n">
-              {{ n + 1 }}
-            </sup>
-          </button>          
-        </th>
-        <td mat-cell *matCellDef="let message"> {{ message.messageRenderTechnology }} </td>
-      </ng-container>
+        </ng-container>
+        </div>
+			</th>
+			<td mat-cell *matCellDef="let msg">
+			  {{ msg.sourceSystem }}
+			</td>
+		  </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row 
-        (click)="tableRowClicked(row)"
-        *matRowDef="let row; columns: displayedColumns;"
-        [class.selected-row]="isSelected(row, selectedMessages)">
-        </tr>
-    </table>
-  </ng-container>
+		  <!-- DESTINATION -->
+		  <ng-container matColumnDef="destinationAddress">
+        <th mat-header-cell *matHeaderCellDef class="column-search-header">
+          <div class="header-cell">
+          <app-columns-search-input
+          class="column-input-field"
+          [field]="ColumnField.DESTINATION"
+          label="Destination">
+          </app-columns-search-input>
+          <ng-container *ngIf="(columnState$|async)?.[ColumnField.DESTINATION] as colState">
+            <button mat-icon-button
+                class="sort-btn"
+                (click)="toggleSortClicked(ColumnField.DESTINATION)"
+                [class.active]="(columnState$|async)?.[ColumnField.DESTINATION]?.sortDirection">
+            <mat-icon>
+              {{
+              (columnState$|async)?.[ColumnField.DESTINATION]?.sortDirection === 'desc'
+                ? 'arrow_downward'
+                : 'arrow_upward'
+              }}
+            </mat-icon>
+            <sup *ngIf="colState.sortOrder !== undefined">
+              {{ colState.sortOrder + 1}}
+            </sup>
+            </button>
+          </ng-container>
+        </div>
+			</th>
+			<td mat-cell *matCellDef="let msg">
+			  {{ msg.destinationAddress }}
+			</td>
+		  </ng-container>
+
+		  <!-- CORRELATION -->
+		  <ng-container matColumnDef="correlationId">
+			<th mat-header-cell *matHeaderCellDef class="column-search-header">
+			  <div class="header-cell">
+        <app-columns-search-input
+				class="column-input-field"
+				[field]="ColumnField.CORRELATION"
+				label="Correlation">
+			  </app-columns-search-input>
+        <ng-container *ngIf="(columnState$|async)?.[ColumnField.CORRELATION] as colState">
+          <button mat-icon-button
+              class="sort-btn"
+              (click)="toggleSortClicked(ColumnField.CORRELATION)"
+              [class.active]="(columnState$|async)?.[ColumnField.CORRELATION]?.sortDirection">
+            <mat-icon>
+              {{
+              (columnState$|async)?.[ColumnField.CORRELATION]?.sortDirection === 'desc'
+                ? 'arrow_downward'
+                : 'arrow_upward'
+              }}
+            </mat-icon>
+            <sup *ngIf="colState.sortOrder !== undefined">
+              {{ colState.sortOrder + 1}}
+            </sup>
+          </button>
+        </ng-container>
+        </div>
+			</th>
+			<td mat-cell *matCellDef="let msg">
+			  {{ msg.correlationId }}
+			</td>
+		  </ng-container>
+
+		  <!-- PAYLOAD TYPE -->
+		  <ng-container matColumnDef="messageRenderTechnology">
+			<th mat-header-cell *matHeaderCellDef class="column-search-header">
+			  <div class="header-cell">
+        <app-columns-search-input
+				class="column-input-field"
+				[field]="ColumnField.MESSAGE_RENDER_TECHNOLOGY"
+				label="Payload Type">
+			  </app-columns-search-input>
+			  <ng-container *ngIf="(columnState$|async)?.[ColumnField.MESSAGE_RENDER_TECHNOLOGY] as colState">
+          <button mat-icon-button
+              class="sort-btn"
+              (click)="toggleSortClicked(ColumnField.MESSAGE_RENDER_TECHNOLOGY)"
+              [class.active]="(columnState$|async)?.[ColumnField.MESSAGE_RENDER_TECHNOLOGY]?.sortDirection">
+            <mat-icon>
+              {{
+              (columnState$|async)?.[ColumnField.MESSAGE_RENDER_TECHNOLOGY]?.sortDirection === 'desc'
+                ? 'arrow_downward'
+                : 'arrow_upward'
+              }}
+            </mat-icon>
+            <sup *ngIf="colState.sortOrder !== undefined">
+              {{ colState.sortOrder + 1}}
+            </sup>
+          </button>
+        </ng-container>
+      </div>
+			</th>
+			<td mat-cell *matCellDef="let msg">
+			  {{ msg.messageRenderTechnology }}
+			</td>
+		  </ng-container>
+
+		  <!-- Header & Data Rows -->
+		  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+		  <tr mat-row
+			  *matRowDef="let row; columns: displayedColumns"
+			  (click)="tableRowClicked(row)"
+			  [class.selected-row]="isSelected(row, selectedMessages)">
+		  </tr>
+		</table>
+	</ng-container>
   </div>
-  <mat-paginator *ngIf="(pagination$ | async) as pagination"
-                  [length]="pagination.totalElements"
-                  [pageSize]="pagination.pageSize"
-                  [pageSizeOptions]="[3, 5, 10, 25]"
-                  [showFirstLastButtons]="true"
-                  (page)="page($event)"
-                  class="sticky-paginator">
+
+  <mat-paginator
+    [length]="(pagination$ | async)?.totalElements"
+    [pageSize]="(pagination$ | async)?.pageSize"
+    [pageSizeOptions]="[3,5,10,25]"
+    showFirstLastButtons
+    (page)="page($event)"
+    class="sticky-paginator">
   </mat-paginator>
 </div>

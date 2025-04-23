@@ -23,6 +23,7 @@
   transition: color 200ms ease-in;
 }
 
+
 ::ng-deep .column-input-field button[mat-icon-button]:hover {
   opacity: 1;
 }

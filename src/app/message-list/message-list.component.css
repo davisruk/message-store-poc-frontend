@@ -1,133 +1,63 @@
-::ng-deep .mat-mdc-row:hover {
-    background-color: var(--mat-mdc-accent, #82b1ff);
-    cursor: pointer;
-  }
-  
-  ::ng-deep .mat-mdc-row.selected-row{
-    background-color: #1976d2;
-    color: white;
-    transition: background-color 200ms ease-in, color 200ms ease-in;
-  }
-
-  ::ng-deep .mat-mdc-row,
-::ng-deep .mat-mdc-cell {
-  user-select: none;       /* prevents text selection/caret */
-  outline: none;           /* removes focus outline */
-}
-
-::ng-deep .mat-mdc-row {
-    pointer-events: auto;
-  }
+/* table stays a table */
+.table-wrapper   { display: flex; flex-direction: column; max-height:60vh; }
+.table-container { flex:1; overflow:auto; }
 .message-summary-table {
-  font-size: 0.85rem; /* Adjust font size for better readability */
+  width:100%; table-layout:auto; border-collapse:collapse;
 }
 
-::ng-deep .filter-row {
-  position: sticky;
-  top: 56px; 
-  z-index: 10;
-  background-color: white; /* ensure it's above table rows */
+/* header row stays sticky */
+.mat-header-row {
+  position: sticky; top:0; z-index:2;
+  background:white; border-bottom:1px solid #ccc;
 }
 
-::ng-deep .mat-header-row.filter-row {
-  position: sticky;
-  top: 56px; /* adjust based on actual header height */
-  z-index: 10;
-  background-color: white;
-  border-bottom: 1px solid #ccc;
-}
-
-::ng-deep .mat-header-row:not(.filter-row) {
-  position: sticky;
-  top: 0;
-  z-index: 11;
-  background-color: white;
-}
-
-.table-wrapper {
+/* wrap only the cell content */
+.header-cell {
   display: flex;
-  flex-direction: column;
-  max-height: 60vh; /* or 80vh, adjust based on your layout */
-  border: 1px solid #ddd;
-  overflow: hidden;
+  align-items: center;
+  gap: 4px;
 }
 
-.table-container {
-  overflow-x: auto;
-  overflow-y: auto;
-  flex-grow: 1;
-  min-height: 200px;
-  width: 100%;
+/* let the search input shrink */
+.column-input-field {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
-.mat-mdc-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: auto;
-}
-
-.mat-mdc-cell{
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mat-mdc-header-cell {
-  white-space: nowrap;
-}
-
-/* Handset: < 600px */
-@media (max-width: 599.98px) {
-  .mat-column-destinationAddress,
-  .mat-column-messageRenderTechnology {
-    display: none;
-  }
-}
-
-/* Tablet: 600px - 839.99px */
-@media (min-width: 600px) and (max-width: 839.98px) {
-  .mat-column-messageRenderTechnology {
-    display: none;
-  }
-}
-
-/* Web: >= 840px */
-@media (min-width: 840px) {
-  /* All columns visible */
-}
-
-.sticky-paginator {
-  position: sticky;
-  bottom: 0;
-  background-color: white;
-  z-index: 5;
-  border-top: 1px solid #ccc;
-  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
-}
-
+/* keep the sort button tight */
 .sort-btn {
+  flex: 0 0 auto;
   padding: 0;
   margin-left: 4px;
-  vertical-align: middle;
   cursor: pointer;
   color: rgba(0,0,0,0.54);
 }
 .sort-btn.active {
   color: #002d72;
 }
-.sort-btn mat-icon {
-  font-size: 16px;
-}
-.sort-btn sup {
-  font-size: 10px;
-  vertical-align: super;
-  margin-left: 2px;
+
+/* data cells */
+.mat-cell, .mat-header-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-:host {
-  display: block;
-  background: transparent;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  padding: 0px;
-  margin: 0px;
+/* row hover & selection */
+.mat-row:hover { background: var(--mat-mdc-accent,#82b1ff); }
+.selected-row  { background:#1976d2; color:#fff; }
+
+/* paginator sticky */
+.sticky-paginator {
+  position:sticky; bottom:0;
+  background:#fff; z-index:1; border-top:1px solid #ccc;
+}
+
+/* responsive hides */
+@media (max-width:599.98px) {
+  .mat-column-destinationAddress,
+  .mat-column-messageRenderTechnology { display:none; }
+}
+@media (min-width:600px) and (max-width:839.98px) {
+  .mat-column-messageRenderTechnology { display:none; }
 }
