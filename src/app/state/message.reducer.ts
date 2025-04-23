@@ -2,6 +2,7 @@ import { createReducer, on } from "@ngrx/store";
 import { ColumnState, initialMessageState, Message, SortDirection } from "./state";
 import * as MessageActions from './message.actions';
 import { ColumnField } from "./column-fields";
+import { toggleSort } from "./message.actions";
 
 export const messageReducer = createReducer(
     initialMessageState,
@@ -84,39 +85,60 @@ export const messageReducer = createReducer(
         },
         paginatedMessages: { ...state.paginatedMessages!, pageNumber: 0 }
     })),
-    on(MessageActions.toggleSort, (state, { field }) => {
-        const entries = Object.entries(state.columnSearch) as [ColumnField, ColumnState][];
-        const sorted = entries
-            .filter(([_,s]) => s.sortDirection != null)
-            .sort((a,b) => (a[1].sortOrder! - b[1].sortOrder!));
-        
-        const current = state.columnSearch[field];
-        let nextDirection: SortDirection | undefined;
-        let nextOrder: number | undefined;
-        if(!current.sortDirection) {
-            nextDirection = 'asc';
-            nextOrder = sorted.length;
+    on(toggleSort, (state, { field }) => {
+        const colMap = { ...state.columnSearch };
+        const current = colMap[field];
+      
+        // 1) Gather sorted fields by their order
+        const orderedFields = Object.entries(colMap)
+          .filter(([, cs]) => cs.sortOrder != null)
+          .sort(([, a], [, b]) => (a.sortOrder! - b.sortOrder!))
+          .map(([f]) => f as ColumnField);
+      
+        let removedOrder: number|undefined;
+        if (!current.sortDirection) {
+          // not sorted before → add ascending at end
+          colMap[field] = {
+            ...current,
+            sortDirection: 'asc',
+            sortOrder: orderedFields.length
+          };
         } else if (current.sortDirection === 'asc') {
-            nextDirection = 'desc';
-            nextOrder = current.sortOrder;
+          // flip to descending, keep same order slot
+          colMap[field] = {
+            ...current,
+            sortDirection: 'desc'
+          };
         } else {
-            nextDirection = undefined;
-            nextOrder = undefined;
+          // was descending → remove from map
+          removedOrder = current.sortOrder;
+          colMap[field] = {
+            ...current,
+            sortDirection: undefined,
+            sortOrder: undefined
+          };
         }
+      
+        // 2) If we removed one, shift down all greater orders
+        if (removedOrder != null) {
+          Object.entries(colMap).forEach(([f, cs]) => {
+            if (cs.sortOrder != null && cs.sortOrder > removedOrder!) {
+              colMap[f] = {
+                ...cs,
+                sortOrder: cs.sortOrder - 1
+            }
+          }});
+        }
+      
         return {
-            ...state,
-            columnSearch: {
-                ...state.columnSearch,
-                [field]: {
-                    ...state.columnSearch[field],
-                    filter: state.columnSearch[field].filter,
-                    sortDirection: nextDirection,
-                    sortOrder: nextOrder
-                },
-            },
-            paginatedMessages: { ...state.paginatedMessages!, pageNumber: 0 }
-        }
-    }),
+          ...state,
+          columnSearch: colMap,
+          paginatedMessages: {
+            ...state.paginatedMessages!,
+            pageNumber: 0
+          }
+        };
+      }),
     on(MessageActions.clearColumnSearch, (state) => ({
         ...state,
         columnSearch: initialMessageState.columnSearch
