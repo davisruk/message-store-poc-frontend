@@ -1,0 +1,26 @@
+.header-cell {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    overflow: visible;
+    white-space: nowrap;
+  }
+  .column-input-field {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .sort-btn {
+    flex: 0 0 auto;
+    cursor: pointer;
+    padding: 0;
+    color: rgba(0,0,0,0.54);
+  }
+  .sort-btn.active {
+    color: #002d72;
+  }
+  .sort-btn mat-icon { font-size: 16px; }
+  .sort-btn sup {
+    font-size: 10px;
+    vertical-align: super;
+    margin-left: 2px;
+  }

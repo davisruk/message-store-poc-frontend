@@ -12,10 +12,11 @@ import { safeSubscribe } from '../utils/rx-helpers';
 import { ColumnsSearchInputComponent } from '../columns-search-input/columns-search-input.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ColumnField, DesktopColumns, HandsetColumns, TabletColumns } from '../state/column-fields';
+import { ColumnHeaderComponent } from '../column-header/column-header.component';
 
 @Component({
   selector: 'app-message-list',
-  imports: [CommonModule, MatPaginatorModule, MatIconModule, MatTableModule, ColumnsSearchInputComponent],
+  imports: [CommonModule, MatPaginatorModule, MatIconModule, MatTableModule, ColumnHeaderComponent],
   templateUrl: './message-list.component.html',
   styleUrl: './message-list.component.css'
 })

@@ -11,30 +11,9 @@
 		  <!-- ID column -->
 		  <ng-container matColumnDef="messageId">
 			<th mat-header-cell *matHeaderCellDef class="column-search-header">
-        <div class="header-cell">
-          <app-columns-search-input
-            class="column-input-field"
-            [field]="ColumnField.ID"
-            label="ID">
-          </app-columns-search-input>
-          <ng-container *ngIf="(columnState$|async)?.[ColumnField.ID] as colState">
-            <button mat-icon-button
-              class="sort-btn"
-              (click)="toggleSortClicked(ColumnField.ID)"
-              [class.active]="(columnState$|async)?.[ColumnField.ID]?.sortDirection">
-              <mat-icon>
-                {{
-                (columnState$|async)?.[ColumnField.ID]?.sortDirection === 'desc'
-                  ? 'arrow_downward'
-                  : 'arrow_upward'
-                }}
-              </mat-icon>
-              <sup *ngIf="colState.sortOrder !== undefined">
-                {{ colState.sortOrder + 1}}
-              </sup>
-            </button>
-        </ng-container>
-        </div>
+        <app-column-header
+          [field]="ColumnField.ID"
+          label="ID"/>
 			</th>
 			<td mat-cell *matCellDef="let msg">
 			  {{ msg.messageId }}
@@ -44,31 +23,10 @@
 		  <!-- SOURCE column -->
 		  <ng-container matColumnDef="sourceSystem">
 			<th mat-header-cell *matHeaderCellDef class="column-search-header">
-			  <div class="header-cell">
-        <app-columns-search-input
-				class="column-input-field"
-				[field]="ColumnField.SOURCE"
-				label="Source">
-			  </app-columns-search-input>
-			  <ng-container *ngIf="(columnState$|async)?.[ColumnField.SOURCE] as colState">
-          <button mat-icon-button
-              class="sort-btn"
-              (click)="toggleSortClicked(ColumnField.SOURCE)"
-              [class.active]="(columnState$|async)?.[ColumnField.SOURCE]?.sortDirection">
-            <mat-icon>
-              {{
-              (columnState$|async)?.[ColumnField.SOURCE]?.sortDirection === 'desc'
-                ? 'arrow_downward'
-                : 'arrow_upward'
-              }}
-            </mat-icon>
-            <sup *ngIf="colState.sortOrder !== undefined">
-              {{ colState.sortOrder + 1}}
-            </sup>
-          </button>
-        </ng-container>
-        </div>
-			</th>
+        <app-column-header
+          [field]="ColumnField.SOURCE"
+          label="Source"/>
+      </th>
 			<td mat-cell *matCellDef="let msg">
 			  {{ msg.sourceSystem }}
 			</td>
@@ -77,31 +35,10 @@
 		  <!-- DESTINATION -->
 		  <ng-container matColumnDef="destinationAddress">
         <th mat-header-cell *matHeaderCellDef class="column-search-header">
-          <div class="header-cell">
-          <app-columns-search-input
-          class="column-input-field"
+          <app-column-header
           [field]="ColumnField.DESTINATION"
-          label="Destination">
-          </app-columns-search-input>
-          <ng-container *ngIf="(columnState$|async)?.[ColumnField.DESTINATION] as colState">
-            <button mat-icon-button
-                class="sort-btn"
-                (click)="toggleSortClicked(ColumnField.DESTINATION)"
-                [class.active]="(columnState$|async)?.[ColumnField.DESTINATION]?.sortDirection">
-            <mat-icon>
-              {{
-              (columnState$|async)?.[ColumnField.DESTINATION]?.sortDirection === 'desc'
-                ? 'arrow_downward'
-                : 'arrow_upward'
-              }}
-            </mat-icon>
-            <sup *ngIf="colState.sortOrder !== undefined">
-              {{ colState.sortOrder + 1}}
-            </sup>
-            </button>
-          </ng-container>
-        </div>
-			</th>
+          label="Destination"/>
+			  </th>
 			<td mat-cell *matCellDef="let msg">
 			  {{ msg.destinationAddress }}
 			</td>
@@ -110,31 +47,10 @@
 		  <!-- CORRELATION -->
 		  <ng-container matColumnDef="correlationId">
 			<th mat-header-cell *matHeaderCellDef class="column-search-header">
-			  <div class="header-cell">
-        <app-columns-search-input
-				class="column-input-field"
-				[field]="ColumnField.CORRELATION"
-				label="Correlation">
-			  </app-columns-search-input>
-        <ng-container *ngIf="(columnState$|async)?.[ColumnField.CORRELATION] as colState">
-          <button mat-icon-button
-              class="sort-btn"
-              (click)="toggleSortClicked(ColumnField.CORRELATION)"
-              [class.active]="(columnState$|async)?.[ColumnField.CORRELATION]?.sortDirection">
-            <mat-icon>
-              {{
-              (columnState$|async)?.[ColumnField.CORRELATION]?.sortDirection === 'desc'
-                ? 'arrow_downward'
-                : 'arrow_upward'
-              }}
-            </mat-icon>
-            <sup *ngIf="colState.sortOrder !== undefined">
-              {{ colState.sortOrder + 1}}
-            </sup>
-          </button>
-        </ng-container>
-        </div>
-			</th>
+        <app-column-header
+        [field]="ColumnField.CORRELATION"
+        label="Correlation"/>
+      </th>
 			<td mat-cell *matCellDef="let msg">
 			  {{ msg.correlationId }}
 			</td>
@@ -143,31 +59,10 @@
 		  <!-- PAYLOAD TYPE -->
 		  <ng-container matColumnDef="messageRenderTechnology">
 			<th mat-header-cell *matHeaderCellDef class="column-search-header">
-			  <div class="header-cell">
-        <app-columns-search-input
-				class="column-input-field"
-				[field]="ColumnField.MESSAGE_RENDER_TECHNOLOGY"
-				label="Payload Type">
-			  </app-columns-search-input>
-			  <ng-container *ngIf="(columnState$|async)?.[ColumnField.MESSAGE_RENDER_TECHNOLOGY] as colState">
-          <button mat-icon-button
-              class="sort-btn"
-              (click)="toggleSortClicked(ColumnField.MESSAGE_RENDER_TECHNOLOGY)"
-              [class.active]="(columnState$|async)?.[ColumnField.MESSAGE_RENDER_TECHNOLOGY]?.sortDirection">
-            <mat-icon>
-              {{
-              (columnState$|async)?.[ColumnField.MESSAGE_RENDER_TECHNOLOGY]?.sortDirection === 'desc'
-                ? 'arrow_downward'
-                : 'arrow_upward'
-              }}
-            </mat-icon>
-            <sup *ngIf="colState.sortOrder !== undefined">
-              {{ colState.sortOrder + 1}}
-            </sup>
-          </button>
-        </ng-container>
-      </div>
-			</th>
+        <app-column-header
+        [field]="ColumnField.MESSAGE_RENDER_TECHNOLOGY"
+        label="Payload Type"/>
+      </th>
 			<td mat-cell *matCellDef="let msg">
 			  {{ msg.messageRenderTechnology }}
 			</td>

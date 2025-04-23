@@ -138,7 +138,7 @@ export const messageReducer = createReducer(
             pageNumber: 0
           }
         };
-      }),
+    }),
     on(MessageActions.clearColumnSearch, (state) => ({
         ...state,
         columnSearch: initialMessageState.columnSearch

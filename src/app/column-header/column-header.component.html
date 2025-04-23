@@ -1,0 +1,23 @@
+<div class="header-cell">
+    <!-- existing search input -->
+    <app-columns-search-input
+      class="column-input-field"
+      [field]="field"
+      [label]="label">
+    </app-columns-search-input>
+
+    <!-- sort button with arrow + superscript -->
+    <ng-container *ngIf="colState$ | async as colState">
+      <button mat-icon-button
+              class="sort-btn"
+              (click)="onSort()"
+              [class.active]="!!colState.sortDirection">
+        <mat-icon>
+          {{ colState.sortDirection === 'desc' ? 'arrow_downward' : 'arrow_upward' }}
+        </mat-icon>
+        <sup *ngIf="colState.sortOrder !== undefined">
+          {{ colState.sortOrder + 1 }}
+        </sup>
+      </button>
+    </ng-container>
+  </div>
