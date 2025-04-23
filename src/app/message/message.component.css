@@ -16,3 +16,15 @@ mat-card-content {
   flex: 1;
   min-width: 0; /* important for flex containers */
 }
+
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: rgba(0,0,0,0.54);
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #d32f2f; /* e.g. red on hover */
+}

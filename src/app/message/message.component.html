@@ -3,6 +3,13 @@
       <mat-card-header>
         <mat-card-title>{{ message.messageId }}</mat-card-title>
         <mat-card-subtitle>{{ message.sourceSystem }} → {{ message.destinationAddress }}</mat-card-subtitle>
+        <button
+          mat-icon-button
+          class="close-btn"
+          aria-label="Close message"
+          (click)="onClose()">
+          <mat-icon>close</mat-icon>
+      </button>
       </mat-card-header>
       <mat-card-content>
         {{ message.payload }}
