@@ -148,9 +148,4 @@ export class MessageListComponent {
   isSelected(row: MessageSummary, selected: Message[]): boolean {
     return selected.some((message) => message.id === row.id);
   }
-
-  toggleSortClicked(field: ColumnField) {
-    this.store.dispatch(toggleSort({ field }));
-    this.store.dispatch(searchMessages());
-  }
 }

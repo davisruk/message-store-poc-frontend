@@ -11,31 +11,6 @@
   background:white; border-bottom:1px solid #ccc;
 }
 
-/* wrap only the cell content */
-.header-cell {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-/* let the search input shrink */
-.column-input-field {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-/* keep the sort button tight */
-.sort-btn {
-  flex: 0 0 auto;
-  padding: 0;
-  margin-left: 4px;
-  cursor: pointer;
-  color: rgba(0,0,0,0.54);
-}
-.sort-btn.active {
-  color: #002d72;
-}
-
 /* data cells */
 .mat-cell, .mat-header-cell {
   white-space: nowrap;

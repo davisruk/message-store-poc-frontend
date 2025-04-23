@@ -8,10 +8,11 @@ import { toggleSort, searchMessages } from '../state/message.actions';
 import { MatIconModule } from '@angular/material/icon';
 import { ColumnsSearchInputComponent } from '../columns-search-input/columns-search-input.component';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-column-header',
-  imports: [MatIconModule, ColumnsSearchInputComponent, CommonModule],
+  imports: [MatIconModule, ColumnsSearchInputComponent, CommonModule, MatButtonModule],
   templateUrl: './column-header.component.html',
   styleUrl: './column-header.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
