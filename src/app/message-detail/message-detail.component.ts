@@ -11,10 +11,11 @@ import { DiffService } from '../services/diff.service';
 import { Change } from 'diff';
 import { DiffViewerComponent } from '../diff-viewer/diff-viewer.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-message-detail',
-  imports: [CommonModule, MessageComponent, MatIconModule, DiffViewerComponent, MatExpansionModule],
+  imports: [CommonModule, MessageComponent, MatIconModule, DiffViewerComponent, MatExpansionModule, MatButtonModule],
   templateUrl: './message-detail.component.html',
   styleUrl: './message-detail.component.css'
 })
