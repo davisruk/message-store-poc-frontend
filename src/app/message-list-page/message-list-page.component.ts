@@ -1,27 +1,24 @@
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatIcon } from '@angular/material/icon';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
 import { MessageListComponent } from '../message-list/message-list.component';
-import { MessageComponent } from '../message/message.component';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { Store } from '@ngrx/store';
 import { Observable, startWith } from 'rxjs';
 import { MESSAGE_DETAIL_PATH } from '../app.routes';
 import { selectSelectedMessages } from '../state/message.selectors';
 import { Message } from '../state/state';
+import { MessageDetailComponent } from '../message-detail/message-detail.component';
 
 @Component({
   selector: 'app-message-list-page',
   imports: [
     CommonModule,
     MessageListComponent,
-    MessageComponent,
     SearchBarComponent,
-    AsyncPipe,
     MatExpansionModule,
-    MatIcon,
+    MessageDetailComponent
   ],
   templateUrl: './message-list-page.component.html',
   styleUrl: './message-list-page.component.css'

@@ -28,3 +28,19 @@ mat-card-content {
 .close-btn:hover {
   color: #d32f2f; /* e.g. red on hover */
 }
+
+/* instead of just flex:1, also make them flex‐containers: */
+.detail-content app-message,
+.detail-content app-diff-viewer {
+  flex: 1 1 0;
+  display: flex;           /* turn each panel into a flex‐box */
+  flex-direction: column;  /* so its contents stack top→bottom */
+  overflow: hidden;        /* children scroll, not the panel’s white gap */
+}
+
+.detail-content app-message ::ng-deep mat-card {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}

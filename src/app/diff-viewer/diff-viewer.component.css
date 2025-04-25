@@ -1,0 +1,20 @@
+.diff-container {
+    font-family: monospace;
+    white-space: pre-wrap;
+    border: 1px solid #ccc;
+    padding: 8px;
+    max-height: 70vh;
+    overflow: auto;
+  }
+  .added {
+    background-color: #e6ffed;
+  }
+  .removed {
+    background-color: #ffebeb;
+  }
+  .unchanged {
+    /* no special styling */
+  }
+  pre {
+    margin: 0;
+  }

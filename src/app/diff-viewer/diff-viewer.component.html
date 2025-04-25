@@ -1,0 +1,11 @@
+<div class="diff-container">
+    <ng-container *ngFor="let part of diff">
+      <pre [ngClass]="{
+          'added': part.added,
+          'removed': part.removed,
+          'unchanged': !part.added && !part.removed
+        }">
+        {{ part.value }}
+      </pre>
+    </ng-container>
+  </div>

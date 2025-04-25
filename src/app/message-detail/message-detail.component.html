@@ -1,11 +1,52 @@
-<div class="detail-header">
-    <h2>Message Comparison</h2>
-    <button mat-icon-button (click)="restore()" aria-label="Restore to list">
-      <mat-icon>fullscreen_exit</mat-icon>
-    </button>
-  </div>
-  
-  <div class="detail-content" *ngIf="selectedMessages$ | async as selectedMessages">
-    <app-message [messageIndex]="0"></app-message>
-    <app-message *ngIf="selectedMessages.length > 1" [messageIndex]="1"></app-message>
-  </div>
+<mat-accordion>
+  <mat-expansion-panel
+    [expanded]="true"
+     [ngClass]="{ 'maximized': isMaximized }">
+    <mat-expansion-panel-header (click)="onHeaderClick($event)">
+      <mat-panel-title>Selected Messages</mat-panel-title>
+
+      <!-- Diff toggle -->
+      <ng-container *ngIf="selectedMessages$ | async as selectedMessages">
+        <mat-panel-description *ngIf="selectedMessages.length > 1">
+          <span class="message-count">{{ selectedMessages.length }} messages</span>
+        </mat-panel-description>
+        <button mat-stroked-button
+          color="primary"
+          (click)="toggleDiff(); $event.stopPropagation()"
+          [disabled]="selectedMessages.length < 2">
+            <mat-icon>{{ showDiff ? 'visibility_off' : 'visibility' }}</mat-icon>
+            {{ showDiff ? 'Hide differences' : 'Show differences' }}
+        </button>
+
+      <button mat-icon-button
+        aria-label="Toggle Fullscreen"
+        (click)="toggleMaximize($event); $event.stopPropagation()"
+        [disabled]="selectedMessages.length == 0">
+        <mat-icon>{{ isMaximized ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+      </button>
+    </ng-container>
+    </mat-expansion-panel-header>
+
+    <div class="detail-content">
+      <!-- Raw messages view -->
+      <ng-container *ngIf="!showDiff; else diffView">
+        <app-message [messageIndex]="0"></app-message>
+        <ng-container *ngIf="selectedMessages$|async as selectedMessages">
+          <app-message *ngIf="selectedMessages.length > 1"
+                     [messageIndex]="1">
+          </app-message>
+        </ng-container>
+      </ng-container>
+
+      <!-- Diff view -->
+      <ng-template #diffView>
+        <ng-container *ngIf="leftDiff$  | async as left">
+          <app-diff-viewer [diff]="left"></app-diff-viewer>
+        </ng-container>
+        <ng-container *ngIf="rightDiff$ | async as right">
+          <app-diff-viewer [diff]="right"></app-diff-viewer>
+        </ng-container>
+      </ng-template>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

@@ -1,37 +1,124 @@
-.detail-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-    background: white;
-    border-bottom: 1px solid #ccc;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-  
-  .detail-content {
-    display: flex;
-    flex-direction: row;
-    gap: 16px;
-    padding: 16px;
-    height: calc(100vh - 80px); /* Leave room for header */
-    overflow: hidden;
-    box-sizing: border-box;
-  }
-  
-  .detail-content app-message {
-    flex: 1;
-    overflow-y: auto;
-    border: 1px solid #eee;
-    padding: 8px;
-    background: #fafafa;
-  }
-
-.detail-header button[mat-icon-button] {
-    cursor: pointer;
+:host {
+  display: block;
 }
 
-.detail-header button[mat-icon-button]:hover {
-    opacity: 0.85;
+:host ::ng-deep .mat-expansion-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* in fullscreen it’s 100vh, otherwise auto */
+}
+
+/* 2) Make the content wrapper fill the available space */
+:host ::ng-deep .mat-expansion-panel-content {
+  /* override Material’s default block layout */
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  overflow: auto;/* hide overflow on the container */
+}
+
+/* Full‐screen styling */
+::ng-deep .mat-expansion-panel.maximized {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  margin: 0; padding: 16px;
+  z-index: 1000;
+  background: white;
+}
+::ng-deep .mat-expansion-panel.maximized
+  .mat-expansion-panel-header {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1001;
+}
+
+/* Panel content */
+.detail-content {
+  display: flex;
+  gap: 16px;
+  flex: 1 1 auto;
+  overflow: visible;
+  flex-direction: row;
+}
+
+.detail-content app-message,
+.detail-content app-diff-viewer {
+  flex: 1 1 0;
+  overflow-y: visible;
+  display: flex;           /* turn each panel into a flex‐box */
+  flex-direction: column;  /* so its contents stack top→bottom */
+}
+
+.detail-content app-message ::ng-deep .mat-card-content {
+  padding: 16px;
+}
+
+:host ::ng-deep app-message .mat-card {
+  flex: 1 1 auto;      /* grow to fill height */
+  display: flex;       /* turn card into a flex container */
+  flex-direction: column;
+  overflow: auto;      /* card-body will scroll if content overflows */
+}
+
+/* 5) If you have a diff-viewer panel, do likewise */
+:host ::ng-deep app-diff-viewer {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* (Optional) If your diff-viewer wraps in a .diff-container, ensure it scrolls) */
+:host ::ng-deep app-diff-viewer .diff-container {
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+/* 1) Turn the entire panel-content into a flex column that fills available space */
+:host ::ng-deep .mat-expansion-panel-content {
+  display: flex;             /* flex container for header + body */
+  flex-direction: column;
+  flex: 1 1 auto;            /* grow to fill panel */
+  overflow: hidden;          /* children scroll, not this wrapper */
+  /* remove default padding on the content wrapper, so our .detail-content can fill */
+  padding: 0 !important;
+}
+
+/* 2) Now make the panel-body itself flex so .detail-content can stretch */
+:host ::ng-deep .mat-expansion-panel-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;            /* consume all remaining height */
+  overflow: hidden;
+  /* optional: if you’d rather keep a bit of padding around .detail-content */
+  /* padding: 0; */
+}
+
+/* 4) Each child (message or diff viewer) takes equal horizontal space */
+.detail-content > * {
+  flex: 1 1 0;               /* equal share */
+  min-width: 0;              /* allow shrinking */
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+/* 5) Let the mat-card inside your message component fill its container */
+:host ::ng-deep app-message .mat-card {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+/* 6) And same for your diff-panel, if used */
+:host ::ng-deep app-diff-viewer {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+}
+:host ::ng-deep app-diff-viewer .diff-container {
+  flex: 1 1 auto;
+  overflow: auto;
 }
