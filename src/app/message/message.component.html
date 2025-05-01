@@ -1,18 +1,25 @@
 <div *ngIf="message$ | async as message" class="message-container">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>{{ message.messageId }}</mat-card-title>
-        <mat-card-subtitle>{{ message.sourceSystem }} → {{ message.destinationAddress }}</mat-card-subtitle>
-        <button
-          mat-icon-button
-          class="close-btn"
-          aria-label="Close message"
-          (click)="onClose()">
+  <mat-card class="message-card">
+    <mat-card-header>
+      <mat-card-title>{{ message.messageId }}</mat-card-title>
+      <mat-card-subtitle>{{ message.sourceSystem }} → {{ message.destinationAddress }}</mat-card-subtitle>
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Find in message</mat-label>
+        <input matInput [formControl]="searchControl" placeHolder="Type to search" />
+        <button *ngIf="searchControl.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch()">
           <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <button
+        mat-icon-button
+        class="close-btn"
+        aria-label="Close message"
+        (click)="onClose()">
+        <mat-icon>close</mat-icon>
       </button>
-      </mat-card-header>
-      <mat-card-content>
-        {{ message.payload }}
-      </mat-card-content>
-    </mat-card>
-  </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="message-body" [innerHTML]="highlightedHtml"></div>
+    </mat-card-content>
+  </mat-card>
+</div>

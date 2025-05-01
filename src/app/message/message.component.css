@@ -1,20 +1,32 @@
-.message-container {
-  width: 100%;
-  max-width: 600px;
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;  /* take up your flex parent’s full half-width/height */
+  min-width: 0;    /* critical for flex children to shrink properly */
+  height: 100%;
+}
 
+.message-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;     /* fill your flex cell from the detail view */
+  min-width: 0;       /* allow it to shrink in tight layouts */
+  height: 100%;
+}
+
+.message-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  overflow: hidden; /* if you want it to fill its container */
 }
 
 mat-card-content {
+  flex: 1 1 auto;
+  overflow: auto;   /* actual scrollable area */
   white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  word-break: break-word;
   font-family: monospace;
-}
-
-:host {
-  display: block;
-  flex: 1;
-  min-width: 0; /* important for flex containers */
 }
 
 .close-btn {
@@ -43,4 +55,22 @@ mat-card-content {
   display: flex;
   flex-direction: column;
   overflow: auto;
+}
+
+mark {
+  background-color: yellow;
+  color: inherit;
+  padding: 0;
+}
+
+.search-field {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.message-body {
+  flex: 1 1 auto;
+  overflow: auto;
+  white-space: pre-wrap; /* preserve line breaks */
+  font-family: monospace;
 }
