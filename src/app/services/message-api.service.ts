@@ -12,7 +12,7 @@ export class MessageApiService {
   private http = inject(HttpClient);
 
   getMessage(id: string): Observable<Message> {
-    return this.http.get<Message>(`http://localhost:8080/api/messages/${id}`);
+    return this.http.get<Message>(`http://localhost:9090/api/messages/${id}`);
   }
 
   searchMessages(query: string, includePayload: boolean, pageNumber: number, size: number, columnState: Record<ColumnField, ColumnState>): Observable<PaginatedMessageSummary> {
@@ -34,7 +34,7 @@ export class MessageApiService {
           params = params.append(field, state.filter); // Append filter for each field
         }});
    
-    return this.http.get<PaginatedMessageSummary>('http://localhost:8080/api/messages/loadMessageSummaries', { params });
+    return this.http.get<PaginatedMessageSummary>('http://localhost:9090/api/messages/loadMessageSummaries', { params });
   }
     
 }
