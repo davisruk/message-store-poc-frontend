@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectSelectedMessages } from '../state/message.selectors';
@@ -12,6 +12,7 @@ import { Change } from 'diff';
 import { DiffViewerComponent } from '../diff-viewer/diff-viewer.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
+import { safeSubscribe } from '../utils/rx-helpers';
 
 @Component({
   selector: 'app-message-detail',
@@ -19,11 +20,12 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './message-detail.component.html',
   styleUrl: './message-detail.component.css'
 })
-export class MessageDetailComponent {
+export class MessageDetailComponent implements OnInit {
   private store:Store = inject(Store);
   private router:Router = inject(Router);
   private diffService:DiffService = inject(DiffService);
-
+  private destroyRef = inject(DestroyRef);
+  
   isMaximized = false;
 
   selectedMessages$:Observable<Message[]> = this.store.select(selectSelectedMessages).pipe(
@@ -50,6 +52,14 @@ export class MessageDetailComponent {
   rightDiff$ = this.diffs$.pipe(
     map(parts => parts.filter(part => part.added || (!part.added && !part.removed)))
   );
+
+  ngOnInit(){
+    safeSubscribe(this.selectedMessages$, this.destroyRef, (list) => {
+      if (this.isMaximized && list.length === 0) {
+        this.isMaximized = false;
+      }
+    });
+  }
 
   toggleDiff() {
     this.showDiff = !this.showDiff;
