@@ -21,6 +21,47 @@
   overflow: hidden; /* if you want it to fill its container */
 }
 
+/* container: always two lines */
+.message-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;       /* space between rows */
+  padding: 16px;  /* match Material’s header padding */
+}
+
+/* Top row: title, subtitle, close button */
+.header-top {
+  display: flex;
+  align-items: center;
+}
+.header-top mat-card-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-right: 16px;
+}
+.header-top mat-card-subtitle {
+  color: rgba(0,0,0,0.6);
+  margin-right: auto;  /* push the close button to the far right */
+}
+.header-top .close-btn {
+  flex: 0 0 auto;
+}
+
+/* Bottom row: search input across full width */
+.header-bottom {
+  display: flex;
+}
+.header-bottom .search-field {
+  flex: 1 1 auto;
+  min-width: 0; /* allow it to shrink if needed */
+}
+
+@media (min-width: 600px) {
+  .message-header .search-field {
+    min-width: 300px;
+  }
+}
+
 mat-card-content {
   flex: 1 1 auto;
   overflow: auto;   /* actual scrollable area */
@@ -30,10 +71,9 @@ mat-card-content {
 }
 
 .close-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  color: rgba(0,0,0,0.54);
+  position: relative;
+  top: auto;
+  right: auto;
   cursor: pointer;
 }
 

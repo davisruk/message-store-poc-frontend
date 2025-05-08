@@ -66,7 +66,8 @@ export class MessageComponent {
     this.sub.unsubscribe();
   }
 
-  clearSearch() {
+  clearSearch(event: Event) {
+    event.stopPropagation();
     this.searchControl.setValue('');
   }
 
@@ -92,7 +93,8 @@ export class MessageComponent {
     return normalized.replace(re, `<mark>$1</mark>`);
   }
 
-  onClose() {
+  onClose(event: Event) {
+    event.stopPropagation();
     this.message$.pipe(take(1)).subscribe(message => {
       if (message) {
         this.store.dispatch(addSelectedMessage({ message }));
