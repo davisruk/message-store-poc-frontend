@@ -1,11 +1,11 @@
-<div class="diff-container">
+<div class="diff-inline">
     <ng-container *ngFor="let part of diff">
-      <pre [ngClass]="{
+      <span [ngClass]="{
           'added': part.added,
           'removed': part.removed,
           'unchanged': !part.added && !part.removed
         }">
         {{ part.value }}
-      </pre>
+      </span>
     </ng-container>
   </div>

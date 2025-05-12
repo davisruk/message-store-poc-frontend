@@ -1,20 +1,19 @@
-.diff-container {
-    font-family: monospace;
-    white-space: pre-wrap;
-    border: 1px solid #ccc;
-    padding: 8px;
-    max-height: 70vh;
-    overflow: auto;
-  }
-  .added {
-    background-color: #e6ffed;
-  }
-  .removed {
-    background-color: #ffebeb;
-  }
-  .unchanged {
-    /* no special styling */
-  }
-  pre {
-    margin: 0;
-  }
+.diff-inline {
+  font-family: monospace;
+  white-space: pre-wrap;       /* wrap at word boundaries */
+  word-break: break-word;
+  /* remove any <pre>-driven scrollbars */
+  overflow-x: hidden;
+}
+
+.diff-inline .added {
+  background-color: #e6ffed;
+}
+
+.diff-inline .removed {
+  background-color: #ffebeb;
+}
+
+.diff-inline .unchanged {
+  /* no special styling */
+}
