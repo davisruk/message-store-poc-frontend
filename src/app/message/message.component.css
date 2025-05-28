@@ -25,8 +25,8 @@
 .message-header {
   display: flex;
   flex-direction: column;
-  gap: 8px;       /* space between rows */
-  padding: 16px;  /* match Material’s header padding */
+  gap: 8px;
+  padding: 16px;
 }
 
 /* Top row: title, subtitle, close button */
@@ -50,10 +50,17 @@
 /* Bottom row: search input across full width */
 .header-bottom {
   display: flex;
+  gap: 8px;
+  align-items: center;
 }
+
 .header-bottom .search-field {
   flex: 1 1 auto;
   min-width: 0; /* allow it to shrink if needed */
+}
+
+.format-btn {
+  flex: 0 0 auto;
 }
 
 @media (min-width: 600px) {

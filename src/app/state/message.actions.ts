@@ -37,6 +37,21 @@ export const searchMessagesFailure = createAction (
     props<{ error: string }>()
 );
 
+export const formatMessage = createAction (
+    '[Message] Format Message',
+    props<{ id: string }>()
+);
+
+export const formatMessageSuccess = createAction (
+    '[Message] Format Message Success',
+    props<{ id: string, formattedMessage: string }>()
+);
+
+export const formatMessageFailure = createAction (
+    '[Message] Format Message Failure',
+    props<{ error: string }>()
+);
+
 export const updateSearchCriteria = createAction (
     '[Search] Update Search Criteria',
     props<{ query: string, includePayload: boolean }>()

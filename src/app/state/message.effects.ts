@@ -1,10 +1,10 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { map, catchError, of, switchMap, withLatestFrom } from "rxjs";
-import { loadMessage, loadMessageSuccess, loadMessageFailure, searchMessages, searchMessagesSuccess, searchMessagesFailure, addSelectedMessage } from "./message.actions";
+import { map, catchError, of, switchMap, withLatestFrom, mergeMap, take } from "rxjs";
+import { loadMessage, loadMessageSuccess, loadMessageFailure, searchMessages, searchMessagesSuccess, searchMessagesFailure, addSelectedMessage, formatMessage, formatMessageSuccess, formatMessageFailure } from "./message.actions";
 import { MessageApiService } from "../services/message-api.service";
-import { Store } from "@ngrx/store";
-import { selectColumnSearch, selectIncludePayload, selectPageNumber, selectPageSize, selectQuery, selectSortDescriptors } from "./message.selectors";
+import { select, Store } from "@ngrx/store";
+import { selectColumnSearch, selectIncludePayload, selectMessageById, selectPageNumber, selectPageSize, selectQuery, selectSortDescriptors } from "./message.selectors";
 
 @Injectable()
 export class MessageEffects {
@@ -41,4 +41,25 @@ export class MessageEffects {
         }
         )
     ));
+
+formatMessage$ = createEffect(() => this.actions$.pipe(
+  ofType(formatMessage),
+  mergeMap(action =>
+    this.store.select(selectMessageById(action.id)).pipe(
+      take(1),
+      mergeMap(message => {
+        if (message && message.formattedPayload) {
+          return of(formatMessageSuccess({ id: action.id, formattedMessage: message.formattedPayload }));
+        }
+        if (!message) {
+          return of(formatMessageFailure({ error: 'Message not found' }));
+        }
+        return this.messageService.formatMessage(message.formatUrl, message.payload).pipe(
+          map(fp => formatMessageSuccess({ id: action.id, formattedMessage: fp })),
+          catchError(error => of(formatMessageFailure({ error: error.message })))
+        );
+      })
+    )
+  )
+));
 }

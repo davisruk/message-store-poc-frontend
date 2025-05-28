@@ -143,4 +143,13 @@ export const messageReducer = createReducer(
         ...state,
         columnSearch: initialMessageState.columnSearch
     })),
+    on(MessageActions.formatMessageSuccess, (state, {id, formattedMessage}) => {
+      const updated = state.selectedMessages.map((message) => 
+        message.id === id ? { ...message, formattedPayload: formattedMessage } : message
+      );
+      return {
+        ...state,
+        selectedMessages: updated
+      };
+    }),
 );

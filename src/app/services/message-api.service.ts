@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { ColumnState, Message, PaginatedMessageSummary, SortDirection } from "../state/state";
 import { Observable } from "rxjs";
@@ -36,5 +36,10 @@ export class MessageApiService {
    
     return this.http.get<PaginatedMessageSummary>('http://localhost:9090/api/messages/loadMessageSummaries', { params });
   }
-    
+
+  formatMessage(url: string, payload: string): Observable<string> {
+    const body = { message: payload };
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.http.post(url, body, { headers, responseType: 'text' as const });
+  }
 }

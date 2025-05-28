@@ -11,6 +11,8 @@ export interface MessageSummary {
 
 export interface Message extends MessageSummary {
     payload: string;
+    formatUrl: string;
+    formattedPayload: string;
 }
 
 export type SortDirection = 'asc' | 'desc';

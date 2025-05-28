@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, debounceTime, distinctUntilChanged, map, Observable, startWith, Subscription, take } from 'rxjs';
 import { Message } from '../state/state';
 import { MatIconModule } from '@angular/material/icon';
-import { addSelectedMessage } from '../state/message.actions';
+import { addSelectedMessage, formatMessage } from '../state/message.actions';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -30,6 +30,7 @@ export class MessageComponent {
   message$: Observable<Message | null>;
   searchControl = new FormControl<string>('', { nonNullable: true });
   highlightedHtml: SafeHtml = '';
+  showFormatted = false;
 
   private sub = new Subscription();
   private sanitizer = inject(DomSanitizer);
@@ -49,18 +50,34 @@ export class MessageComponent {
           distinctUntilChanged()
         )
       ])
+      .subscribe(() => this.renderPayload())
+    );
+  }
+  /*
+  ngOnInit() {
+    this.sub.add(
+      combineLatest([
+        this.message$,
+        this.searchControl.valueChanges.pipe(
+          startWith(''),
+          debounceTime(300),
+          distinctUntilChanged()
+        )
+      ])
       .pipe(
         map(([message, term]) => {
-          const payload = message?.payload ?? '';
-          const raw = term
-            ? this.hilight(payload, term)
-            : payload;
-          return this.sanitizer.bypassSecurityTrustHtml(raw);
+          const raw = message?.payload ?? '';
+          if (this.showFormatted && message?.formattedPayload) {
+            return this.sanitizer.bypassSecurityTrustHtml(this.escapeHtml(message.formattedPayload));
+          }
+          const base = this.highlightRaw(raw, term);
+          return this.sanitizer.bypassSecurityTrustHtml(base);
         })
       )
       .subscribe(safe => this.highlightedHtml = safe)
     );
   }
+*/
 
   ngOnDestroy() {
     this.sub.unsubscribe();
@@ -71,34 +88,78 @@ export class MessageComponent {
     this.searchControl.setValue('');
   }
 
-  private getPayload(): string {
-    var val: string = ''; 
-    this.message$.pipe(take(1)).subscribe(message => val = message?.payload ?? '');
-    return val; 
-  }
+  onToggleFormat() {
+    this.message$.pipe(take(1)).subscribe(msg => {
+      if (!msg) return;
+      // flip the flag
+      this.showFormatted = !this.showFormatted;
 
-  private sanitize(payload: string): SafeHtml {
+      // if we're about to show formatted and need to fetch it:
+      if (this.showFormatted && !msg.formattedPayload && msg.formatUrl) {
+        this.store.dispatch(formatMessage({ id: msg.id }));
+      }
 
-    return this.sanitizer.bypassSecurityTrustHtml(payload);
-  }
-
-  private escapeRegExp(text: string): string {
-    return text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      // force a re-evaluation of the combined stream:
+      this.renderPayload();
+    });
   }
   
-  private hilight(text: string, term: string): string {
-    // Normalize CRLF → LF if needed
-    const normalized = text.replace(/\r\n/g, '\n');
-    const re = new RegExp(`(${this.escapeRegExp(term)})`, 'gi');
-    return normalized.replace(re, `<mark>$1</mark>`);
-  }
-
   onClose(event: Event) {
     event.stopPropagation();
     this.message$.pipe(take(1)).subscribe(message => {
       if (message) {
         this.store.dispatch(addSelectedMessage({ message }));
       }
+    });
+  }
+
+  onFormat() {
+    this.message$.pipe(take(1)).subscribe(msg => {
+      if (msg?.id && msg.formatUrl && !msg.formattedPayload) {
+        this.store.dispatch(formatMessage({ id: msg.id }));
+      }
+    });
+  }
+
+  /** escape HTML so formattedPayload shows as text */
+  private escapeHtml(text: string): string {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  private highlightRaw(raw: string, term: string): string {
+    if (!term) return this.escapeHtml(raw);
+    const esc = (t: string) =>
+      t.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const re = new RegExp(`(${esc(term)})`, 'gi');
+    return this.escapeHtml(raw).replace(re, `<mark>$1</mark>`);
+  }
+
+  private renderPayload() {
+    this.message$.pipe(take(1)).subscribe(msg => {
+      if (!msg) {
+        this.highlightedHtml = '';
+        return;
+      }
+
+      let htmlToShow: string;
+      if (this.showFormatted && msg.formattedPayload) {
+        htmlToShow = this.escapeHtml(msg.formattedPayload);
+      } else {
+        const raw = msg.payload ?? '';
+        const term = this.searchControl.value;
+        if (term) {
+          const esc = (t: string) =>
+            t.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+          const re = new RegExp(`(${esc(term)})`, 'gi');
+          htmlToShow = this.escapeHtml(raw).replace(re, `<mark>$1</mark>`);
+        } else {
+          htmlToShow = this.escapeHtml(raw);
+        }
+      }
+      this.highlightedHtml = this.sanitizer.bypassSecurityTrustHtml(htmlToShow);
     });
   }
 }

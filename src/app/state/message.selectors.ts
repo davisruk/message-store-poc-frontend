@@ -56,6 +56,11 @@ export const selectColumnSearch = createSelector(
   state => state.columnSearch
 );
 
+export const selectMessageById = (id: string) => createSelector(
+  selectSelectedMessages,
+  msgs => msgs.find(m => m.id === id) || null
+);
+
 export const selectSortDescriptors = createSelector(
   selectColumnSearch,
   state => Object.entries(state)
