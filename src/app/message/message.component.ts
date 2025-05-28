@@ -144,20 +144,17 @@ export class MessageComponent {
         return;
       }
 
+      var raw = msg.payload ?? '';
+      const term = this.searchControl.value;
+
       let htmlToShow: string;
       if (this.showFormatted && msg.formattedPayload) {
-        htmlToShow = this.escapeHtml(msg.formattedPayload);
+        raw = msg.formattedPayload;
+      } 
+      if (term) {
+        htmlToShow = this.highlightRaw(raw, term);
       } else {
-        const raw = msg.payload ?? '';
-        const term = this.searchControl.value;
-        if (term) {
-          const esc = (t: string) =>
-            t.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-          const re = new RegExp(`(${esc(term)})`, 'gi');
-          htmlToShow = this.escapeHtml(raw).replace(re, `<mark>$1</mark>`);
-        } else {
-          htmlToShow = this.escapeHtml(raw);
-        }
+        htmlToShow = this.escapeHtml(raw);
       }
       this.highlightedHtml = this.sanitizer.bypassSecurityTrustHtml(htmlToShow);
     });
