@@ -20,6 +20,15 @@
             <mat-icon>close</mat-icon>
           </button>
         </mat-form-field>
+        <div class="search-controls">
+          <button mat-icon-button (click)="previousMatch()" [disabled]="!canGoPrevious">
+            <mat-icon>navigate_before</mat-icon>
+          </button>
+          <span>{{ totalMatches === 0 ? '0 / 0' : (currentMatchIndex + 1) + ' / ' + totalMatches }}</span>
+          <button mat-icon-button (click)="nextMatch()" [disabled]="!canGoNext">
+            <mat-icon>navigate_next</mat-icon>
+          </button>
+        </div>
       </div>
         <!-- format toggle: only show if msg.formatUrl exists -->
         <button *ngIf="message.formatUrl"
@@ -32,8 +41,8 @@
           {{ showFormatted ? 'Show Raw' : 'Format' }}
         </button>   
     </mat-card-header>
-    <mat-card-content>
-      <div class="message-body" [innerHTML]="highlightedHtml"></div>
+    <mat-card-content class="message-body-scrollable">
+      <div #messageContainer class="message-body" [innerHTML]="highlightedHtml"></div>
     </mat-card-content>
   </mat-card>
 </div>

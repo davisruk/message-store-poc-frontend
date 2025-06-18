@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject, Input, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { selectSelectedMessages } from '../state/message.selectors';
 import { Store } from '@ngrx/store';
@@ -31,9 +31,15 @@ export class MessageComponent {
   searchControl = new FormControl<string>('', { nonNullable: true });
   highlightedHtml: SafeHtml = '';
   showFormatted = false;
-
+  currentMatchIndex = 0;
+  highlightedElements: HTMLElement[]=[];
+  @ViewChild('#messageContainer', { static: false }) messageContainer!: ElementRef;
+  @ViewChildren('messageContainer') containers!: QueryList<ElementRef>;
+  
   private sub = new Subscription();
   private sanitizer = inject(DomSanitizer);
+  private cdr = inject(ChangeDetectorRef);
+  private previousMarkCount = 0;
 
   constructor(){
     this.message$ = this.store.select(selectSelectedMessages).pipe(
@@ -53,34 +59,61 @@ export class MessageComponent {
       .subscribe(() => this.renderPayload())
     );
   }
-  /*
-  ngOnInit() {
-    this.sub.add(
-      combineLatest([
-        this.message$,
-        this.searchControl.valueChanges.pipe(
-          startWith(''),
-          debounceTime(300),
-          distinctUntilChanged()
-        )
-      ])
-      .pipe(
-        map(([message, term]) => {
-          const raw = message?.payload ?? '';
-          if (this.showFormatted && message?.formattedPayload) {
-            return this.sanitizer.bypassSecurityTrustHtml(this.escapeHtml(message.formattedPayload));
-          }
-          const base = this.highlightRaw(raw, term);
-          return this.sanitizer.bypassSecurityTrustHtml(base);
-        })
-      )
-      .subscribe(safe => this.highlightedHtml = safe)
-    );
+
+  ngAfterViewChecked(): void {
+    const messageContainer = this.containers.first;
+    if (!messageContainer) {
+      return;
+    } 
+
+    const nativeElement = messageContainer.nativeElement as HTMLElement;
+    const currentMarks = nativeElement.querySelectorAll('mark');
+    if (currentMarks.length !== this.previousMarkCount) {
+      this.highlightedElements = Array.from(currentMarks);
+      this.previousMarkCount = currentMarks.length;
+      this.currentMatchIndex = 0;
+      this.scrollToMatch(this.currentMatchIndex)
+      this.cdr.detectChanges();
+    }
   }
-*/
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  scrollToMatch(index: number){
+    if (!this.highlightedElements || ! this.highlightedElements[index]) return;
+
+    this.highlightedElements.forEach(el => el.classList.remove('highlight-active'));
+    const current = this.highlightedElements[index];
+    current.classList.add('highlight-active');
+    current.scrollIntoView({behavior: 'smooth', block: 'center'});
+  }
+
+  nextMatch(): void {
+    if (this.currentMatchIndex < this.highlightedElements.length - 1) {
+      this.currentMatchIndex++;
+      this.scrollToMatch(this.currentMatchIndex);
+    }
+  }
+
+  previousMatch(): void {
+    if (this.currentMatchIndex > 0) {
+      this.currentMatchIndex--;
+      this.scrollToMatch(this.currentMatchIndex)
+    }
+  }
+
+  get totalMatches(): number {
+    return this.highlightedElements?.length || 0;
+  }
+
+  get canGoPrevious(): boolean {
+    return this.currentMatchIndex > 0;
+  }
+
+  get canGoNext(): boolean {
+    return this.currentMatchIndex < this.totalMatches - 1;
   }
 
   clearSearch(event: Event) {

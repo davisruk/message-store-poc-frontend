@@ -110,6 +110,12 @@ mark {
   padding: 0;
 }
 
+::ng-deep mark.highlight-active {
+  outline: 2px solid black;
+  border-radius: 3px;
+  transition: outline 0.2s ease-in-out;
+}
+
 .search-field {
   width: 100%;
   margin-bottom: 8px;
@@ -120,4 +126,24 @@ mark {
   overflow: auto;
   white-space: pre-wrap; /* preserve line breaks */
   font-family: monospace;
+}
+
+.message-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden; /* Prevent card overflow from affecting layout */
+}
+
+.message-header {
+  flex: 0 0 auto;
+  z-index: 1;
+  background: white; /* Keeps header readable over scrolling content */
+}
+
+.message-body-scrollable {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  position: relative;
+  height: 100%;
 }
